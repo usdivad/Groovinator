@@ -176,3 +176,14 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new GroovinatorAudioProcessor();
 }
+
+//
+void GroovinatorAudioProcessor::setFreq(float v)
+{
+    _freq = v;
+}
+
+float GroovinatorAudioProcessor::getFreq()
+{
+    return _freq;
+}

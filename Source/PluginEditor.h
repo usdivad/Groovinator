@@ -17,7 +17,8 @@
 //==============================================================================
 /**
 */
-class GroovinatorAudioProcessorEditor  : public AudioProcessorEditor
+class GroovinatorAudioProcessorEditor  : public AudioProcessorEditor,
+                                         private Slider::Listener
 {
 public:
     GroovinatorAudioProcessorEditor (GroovinatorAudioProcessor&);
@@ -28,9 +29,15 @@ public:
     void resized() override;
 
 private:
+    //
+    void sliderValueChanged(Slider* slider) override;
+    
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     GroovinatorAudioProcessor& processor;
+    
+    //
+    Slider _freqSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessorEditor)
 };
