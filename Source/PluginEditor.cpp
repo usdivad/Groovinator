@@ -52,6 +52,7 @@ void GroovinatorAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    _freqSlider.setBounds(30, 40, 20, getHeight()-60);
 }
 
 //
