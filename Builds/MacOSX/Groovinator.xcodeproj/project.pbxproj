@@ -110,8 +110,10 @@
 					E34FB44C05C2BB5FE38DAA07,
 					409A98B4BC174096BDD9FBC2,
 					AF9CC118C16C4E078F97CA4B, ); name = Source; sourceTree = "<group>"; };
+		95E62B4D404CF69BBCA12906 = {isa = PBXGroup; children = (  ); name = Library; sourceTree = "<group>"; };
 		4699203B01B63A1FDC298FA9 = {isa = PBXGroup; children = (
-					3CDAF414DAF8B9EBBBCC9FB0, ); name = Groovinator; sourceTree = "<group>"; };
+					3CDAF414DAF8B9EBBBCC9FB0,
+					95E62B4D404CF69BBCA12906, ); name = Groovinator; sourceTree = "<group>"; };
 		29662708A3543467CB730A1A = {isa = PBXGroup; children = (
 					0141019BEF81CB584C248876,
 					BFEAD4468FCF75B768760443,

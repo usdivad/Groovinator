@@ -21,6 +21,7 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="t429z2" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
+    <GROUP id="{DD1FBF3A-ED92-72D1-3019-1D6FE19CA1D1}" name="Library"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
