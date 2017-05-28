@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "SoundTouch.h"
 
 
 //==============================================================================
@@ -61,6 +62,7 @@ public:
 
 private:
     float _freq;
+    soundtouch::SoundTouch _soundTouch;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessor)

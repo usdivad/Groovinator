@@ -22,7 +22,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     
     // Frequency slider
     _freqSlider.setSliderStyle(Slider::LinearBarVertical);
-    _freqSlider.setRange(-1000.0, 1000.0);
+    _freqSlider.setRange(-24.0, 24.0); // Semitones
     _freqSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
     _freqSlider.setPopupDisplayEnabled(true, this);
     _freqSlider.setTextValueSuffix(" Frequency");

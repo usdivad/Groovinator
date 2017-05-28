@@ -25,6 +25,7 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor()
                        )
 #endif
 {
+    //_soundTouch = soundtouch::SoundTouch();
 }
 
 GroovinatorAudioProcessor::~GroovinatorAudioProcessor()
@@ -125,6 +126,8 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
 {
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
+    
+    const int numSamples = buffer.getNumSamples();
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -142,6 +145,18 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         float* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
+        // Pitch shift
+        if (numSamples > 0)
+        {
+            _soundTouch.setSampleRate(getSampleRate());
+            _soundTouch.setChannels(totalNumInputChannels);
+            _soundTouch.putSamples(channelData, numSamples);
+            int numReceivedSamples = _soundTouch.receiveSamples(channelData, numSamples);
+            if (numReceivedSamples != numSamples)
+            {
+                printf("put %d samples but only received %d samples\n", numSamples, numReceivedSamples);
+            }
+        }
     }
 }
 
@@ -181,6 +196,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 void GroovinatorAudioProcessor::setFreq(float v)
 {
     _freq = v;
+    _soundTouch.setPitchSemiTones(v);
 }
 
 float GroovinatorAudioProcessor::getFreq()
