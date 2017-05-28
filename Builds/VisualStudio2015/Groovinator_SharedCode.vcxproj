@@ -140,6 +140,21 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PluginEditor.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\AAFilter.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\BPMDetect.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\cpu_detect_x86.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\FIFOSampleBuffer.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\FIRFilter.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\InterpolateCubic.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\InterpolateLinear.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\InterpolateShannon.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\mmx_optimized.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\PeakFinder.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\RateTransposer.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\SoundTouch.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\sse_optimized.cpp"/>
+    <ClCompile Include="..\..\Library\SoundTouch\TDStretch.cpp"/>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_basics.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_devices.cpp"/>
     <ClCompile Include="..\..\JuceLibraryCode\include_juce_audio_formats.cpp"/>

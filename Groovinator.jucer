@@ -21,7 +21,53 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="t429z2" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
-    <GROUP id="{DD1FBF3A-ED92-72D1-3019-1D6FE19CA1D1}" name="Library"/>
+    <GROUP id="{DD1FBF3A-ED92-72D1-3019-1D6FE19CA1D1}" name="Library">
+      <GROUP id="{7B5A0C96-A3CF-D441-4BD8-3184635F0D03}" name="SoundTouch">
+        <FILE id="XGb7uI" name="AAFilter.cpp" compile="1" resource="0" file="Library/SoundTouch/AAFilter.cpp"/>
+        <FILE id="JzJ4N3" name="AAFilter.h" compile="0" resource="0" file="Library/SoundTouch/AAFilter.h"/>
+        <FILE id="sXm1QB" name="BPMDetect.cpp" compile="1" resource="0" file="Library/SoundTouch/BPMDetect.cpp"/>
+        <FILE id="mjSwRX" name="BPMDetect.h" compile="0" resource="0" file="Library/SoundTouch/BPMDetect.h"/>
+        <FILE id="xorqBE" name="COPYING.TXT" compile="0" resource="1" file="Library/SoundTouch/COPYING.TXT"/>
+        <FILE id="NLLnz9" name="cpu_detect.h" compile="0" resource="0" file="Library/SoundTouch/cpu_detect.h"/>
+        <FILE id="g2MUry" name="cpu_detect_x86.cpp" compile="1" resource="0"
+              file="Library/SoundTouch/cpu_detect_x86.cpp"/>
+        <FILE id="ATLwdF" name="FIFOSampleBuffer.cpp" compile="1" resource="0"
+              file="Library/SoundTouch/FIFOSampleBuffer.cpp"/>
+        <FILE id="X2FUAM" name="FIFOSampleBuffer.h" compile="0" resource="0"
+              file="Library/SoundTouch/FIFOSampleBuffer.h"/>
+        <FILE id="qcuOaT" name="FIFOSamplePipe.h" compile="0" resource="0"
+              file="Library/SoundTouch/FIFOSamplePipe.h"/>
+        <FILE id="XAr63C" name="FIRFilter.cpp" compile="1" resource="0" file="Library/SoundTouch/FIRFilter.cpp"/>
+        <FILE id="StEzPo" name="FIRFilter.h" compile="0" resource="0" file="Library/SoundTouch/FIRFilter.h"/>
+        <FILE id="xFurAk" name="InterpolateCubic.cpp" compile="1" resource="0"
+              file="Library/SoundTouch/InterpolateCubic.cpp"/>
+        <FILE id="ycCrsK" name="InterpolateCubic.h" compile="0" resource="0"
+              file="Library/SoundTouch/InterpolateCubic.h"/>
+        <FILE id="LQHECU" name="InterpolateLinear.cpp" compile="1" resource="0"
+              file="Library/SoundTouch/InterpolateLinear.cpp"/>
+        <FILE id="eN49SH" name="InterpolateLinear.h" compile="0" resource="0"
+              file="Library/SoundTouch/InterpolateLinear.h"/>
+        <FILE id="UZG2X0" name="InterpolateShannon.cpp" compile="1" resource="0"
+              file="Library/SoundTouch/InterpolateShannon.cpp"/>
+        <FILE id="EkKp9c" name="InterpolateShannon.h" compile="0" resource="0"
+              file="Library/SoundTouch/InterpolateShannon.h"/>
+        <FILE id="deK3Mt" name="mmx_optimized.cpp" compile="1" resource="0"
+              file="Library/SoundTouch/mmx_optimized.cpp"/>
+        <FILE id="GPyOGA" name="PeakFinder.cpp" compile="1" resource="0" file="Library/SoundTouch/PeakFinder.cpp"/>
+        <FILE id="NosgSP" name="PeakFinder.h" compile="0" resource="0" file="Library/SoundTouch/PeakFinder.h"/>
+        <FILE id="Uz9JJk" name="RateTransposer.cpp" compile="1" resource="0"
+              file="Library/SoundTouch/RateTransposer.cpp"/>
+        <FILE id="ddvqST" name="RateTransposer.h" compile="0" resource="0"
+              file="Library/SoundTouch/RateTransposer.h"/>
+        <FILE id="Va89c1" name="SoundTouch.cpp" compile="1" resource="0" file="Library/SoundTouch/SoundTouch.cpp"/>
+        <FILE id="cXf94L" name="SoundTouch.h" compile="0" resource="0" file="Library/SoundTouch/SoundTouch.h"/>
+        <FILE id="WXYxms" name="sse_optimized.cpp" compile="1" resource="0"
+              file="Library/SoundTouch/sse_optimized.cpp"/>
+        <FILE id="L0a6vs" name="STTypes.h" compile="0" resource="0" file="Library/SoundTouch/STTypes.h"/>
+        <FILE id="Cut2LF" name="TDStretch.cpp" compile="1" resource="0" file="Library/SoundTouch/TDStretch.cpp"/>
+        <FILE id="SDz6Yo" name="TDStretch.h" compile="0" resource="0" file="Library/SoundTouch/TDStretch.h"/>
+      </GROUP>
+    </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
