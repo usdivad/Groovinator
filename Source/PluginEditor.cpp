@@ -79,11 +79,15 @@ void GroovinatorAudioProcessorEditor::timerCallback()
     {
         AudioPlayHead::CurrentPositionInfo playHeadInfo = processor.getPlayHeadInfo();
 
-        msg << "BPM: " << String((int)playHeadInfo.bpm)
-            << " | Meter: " << String(playHeadInfo.timeSigNumerator)
-            << "/" << String(playHeadInfo.timeSigDenominator)
-            << " | Position: " << String((int)playHeadInfo.ppqPosition)
-            << " | Last Bar Start: " << String((int)playHeadInfo.ppqPositionOfLastBarStart);
+        msg << "BPM: "                  << String((int)playHeadInfo.bpm)
+            << " | Meter: "             << String(playHeadInfo.timeSigNumerator)
+                                        << "/" << String(playHeadInfo.timeSigDenominator)
+        
+            //<< " | Position: "          << String(processor.getPlayHeadBarNum())
+            //                            << "." << String(processor.getPlayHeadRelativePulseNum());
+        
+            << " | Position: "          << String((int)playHeadInfo.ppqPosition)
+            << " | Last Bar Start: "    << String((int)playHeadInfo.ppqPositionOfLastBarStart);
         
             //<< " | Time: " << String((int)playHeadInfo.timeInSeconds)
             //<< "s (" << String(playHeadInfo.timeInSamples) << " samples)";

@@ -219,7 +219,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new GroovinatorAudioProcessor();
 }
 
-//
+// Getters and setters
 void GroovinatorAudioProcessor::setFreq(float v)
 {
     _freq = v;
@@ -231,9 +231,9 @@ float GroovinatorAudioProcessor::getFreq()
     return _freq;
 }
 
-double GroovinatorAudioProcessor::getHostBpm()
+double GroovinatorAudioProcessor::getPlayHeadBpm()
 {
-    return _hostBpm;
+    return _playHeadInfo.bpm;
 }
 
 AudioPlayHead::CurrentPositionInfo GroovinatorAudioProcessor::getPlayHeadInfo()
@@ -244,6 +244,19 @@ AudioPlayHead::CurrentPositionInfo GroovinatorAudioProcessor::getPlayHeadInfo()
 bool GroovinatorAudioProcessor::getHasPlayHeadBeenSet()
 {
     return _hasPlayHeadBeenSet;
+}
+
+int GroovinatorAudioProcessor::getPlayHeadBarNum()
+{
+    // TODO:
+    // - Handle cases where denominator != 4
+    // - Handle time signature changes (do we have access to enough info for this to work?)
+    return _playHeadInfo.ppqPositionOfLastBarStart / _playHeadInfo.timeSigNumerator;
+}
+
+int GroovinatorAudioProcessor::getPlayHeadRelativePulseNum()
+{
+    return _playHeadInfo.ppqPosition - _playHeadInfo.ppqPositionOfLastBarStart;
 }
 
 //void GroovinatorAudioProcessor::updateValuesFromPlayHead()

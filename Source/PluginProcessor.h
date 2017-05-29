@@ -59,15 +59,16 @@ public:
     // Custom getters and setters
     float getFreq();
     void setFreq(float v);
-    double getHostBpm();
     AudioPlayHead::CurrentPositionInfo getPlayHeadInfo();
+    double getPlayHeadBpm();
+    int getPlayHeadBarNum();
+    int getPlayHeadRelativePulseNum();
     bool getHasPlayHeadBeenSet();
 
 private:
     //void updateValuesFromPlayHead();
 
     float _freq;
-    double _hostBpm;
     soundtouch::SoundTouch _soundTouch;
     AudioPlayHead* _playHead;
     AudioPlayHead::CurrentPositionInfo _playHeadInfo;
