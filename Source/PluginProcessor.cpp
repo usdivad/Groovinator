@@ -149,13 +149,25 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         if (numSamples > 0)
         {
             _soundTouch.setSampleRate(getSampleRate());
-            _soundTouch.setChannels(totalNumInputChannels);
+            //_soundTouch.setChannels(totalNumInputChannels);
+            _soundTouch.setChannels(1);
             _soundTouch.putSamples(channelData, numSamples);
-            int numReceivedSamples = _soundTouch.receiveSamples(channelData, numSamples);
-            if (numReceivedSamples != numSamples)
+            
+            int numReceivedSamples = 0;
+            int receiveIterationNum = 0;
+            
+            //if (numReceivedSamples != numSamples)
+            //{
+            //    printf("put %d samples but only received %d samples\n", numSamples, numReceivedSamples);
+            //}
+            
+            do
             {
-                printf("put %d samples but only received %d samples\n", numSamples, numReceivedSamples);
+                receiveIterationNum++;
+                numReceivedSamples = _soundTouch.receiveSamples(channelData, numSamples);
+                //printf("%d.%d: received %d of %d samples\n", channel, receiveIterationNum, numReceivedSamples, numSamples);
             }
+            while (numReceivedSamples != 0 && numReceivedSamples != numSamples);
         }
     }
 }
