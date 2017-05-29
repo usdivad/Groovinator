@@ -35,6 +35,9 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     // Add components to editor
     addAndMakeVisible(&_freqSlider);
     addAndMakeVisible(&_bpmLabel);
+    
+    // Start timer
+    startTimer(250);
 }
 
 GroovinatorAudioProcessorEditor::~GroovinatorAudioProcessorEditor()
@@ -64,4 +67,9 @@ void GroovinatorAudioProcessorEditor::resized()
 void GroovinatorAudioProcessorEditor::sliderValueChanged(Slider* slider)
 {
     processor.setFreq(slider->getValue());
+}
+
+void GroovinatorAudioProcessorEditor::timerCallback()
+{
+    _bpmLabel.setText(String(processor.getHostBpm(), 0), sendNotification);
 }

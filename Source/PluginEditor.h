@@ -18,6 +18,7 @@
 /**
 */
 class GroovinatorAudioProcessorEditor  : public AudioProcessorEditor,
+                                         public Timer,
                                          private Slider::Listener
 {
 public:
@@ -27,18 +28,10 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    
+    virtual void timerCallback() override;
 
 private:
-    // Sub-classes
-    class BpmLabel : public Label,
-                     public ChangeListener
-    {
-        BpmLabel() {};
-        virtual ~BpmLabel() {} override;
-        
-        virtual void changeListenerCallback(ChangeBroadcaster* source) override;
-    };
-    
     // Listener handlers
     void sliderValueChanged(Slider* slider) override;
     

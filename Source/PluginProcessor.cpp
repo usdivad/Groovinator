@@ -24,7 +24,6 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
                  #endif
                    ),
 #endif
-    ChangeBroadcaster(),
     _soundTouch(),
     _playhead(getPlayHead())
 {
@@ -126,13 +125,8 @@ bool GroovinatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
 void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    // Getting info from playhead
-    if (_playhead)
-    {
-        AudioPlayHead::CurrentPositionInfo curPosInfo;
-        _playhead->getCurrentPosition(curPosInfo);
-        printf("%f\n", curPosInfo.bpm);
-    }
+    // Getting host info from playhead
+    printf("host bpm: %f\n", getHostBpm());
     
     // Audio reading and writing
     //
@@ -226,4 +220,15 @@ void GroovinatorAudioProcessor::setFreq(float v)
 float GroovinatorAudioProcessor::getFreq()
 {
     return _freq;
+}
+
+double GroovinatorAudioProcessor::getHostBpm()
+{
+    if (_playhead)
+    {
+        AudioPlayHead::CurrentPositionInfo curPosInfo;
+        _playhead->getCurrentPosition(curPosInfo);
+        return curPosInfo.bpm;
+    }
+    return 0.0;
 }

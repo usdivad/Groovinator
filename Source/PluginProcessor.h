@@ -17,8 +17,7 @@
 //==============================================================================
 /**
 */
-class GroovinatorAudioProcessor : public AudioProcessor,
-                                  public ChangeBroadcaster
+class GroovinatorAudioProcessor : public AudioProcessor
 {
 public:
     //==============================================================================
@@ -57,9 +56,10 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    
+    // Custom getters and setters
     float getFreq();
     void setFreq(float v);
+    double getHostBpm();
 
 private:
     float _freq;
