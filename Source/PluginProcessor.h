@@ -62,7 +62,10 @@ public:
     double getHostBpm();
 
 private:
+    void updatePlayhead();
+    
     float _freq;
+    double _hostBpm;
     soundtouch::SoundTouch _soundTouch;
     AudioPlayHead* _playhead;
     

@@ -25,7 +25,7 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
                    ),
 #endif
     _soundTouch(),
-    _playhead(getPlayHead())
+    _playhead(NULL)
 {
 }
 
@@ -126,7 +126,15 @@ bool GroovinatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     // Getting host info from playhead
-    printf("host bpm: %f\n", getHostBpm());
+    //updatePlayhead();
+    _playhead = getPlayHead();
+    if (_playhead)
+    {
+        AudioPlayHead::CurrentPositionInfo curPosInfo;
+        _playhead->getCurrentPosition(curPosInfo);
+        _hostBpm = curPosInfo.bpm;
+    }
+    //printf("host bpm: %f\n", getHostBpm());
     
     // Audio reading and writing
     //
@@ -224,11 +232,10 @@ float GroovinatorAudioProcessor::getFreq()
 
 double GroovinatorAudioProcessor::getHostBpm()
 {
-    if (_playhead)
-    {
-        AudioPlayHead::CurrentPositionInfo curPosInfo;
-        _playhead->getCurrentPosition(curPosInfo);
-        return curPosInfo.bpm;
-    }
-    return 0.0;
+    return _hostBpm;
+}
+
+void GroovinatorAudioProcessor::updatePlayhead()
+{
+    _playhead = getPlayHead();
 }
