@@ -60,14 +60,18 @@ public:
     float getFreq();
     void setFreq(float v);
     double getHostBpm();
+    AudioPlayHead::CurrentPositionInfo getPlayHeadInfo();
+    bool getHasPlayHeadBeenSet();
 
 private:
-    void updatePlayhead();
-    
+    //void updateValuesFromPlayHead();
+
     float _freq;
     double _hostBpm;
     soundtouch::SoundTouch _soundTouch;
-    AudioPlayHead* _playhead;
+    AudioPlayHead* _playHead;
+    AudioPlayHead::CurrentPositionInfo _playHeadInfo;
+    bool _hasPlayHeadBeenSet;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessor)

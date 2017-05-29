@@ -25,7 +25,8 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
                    ),
 #endif
     _soundTouch(),
-    _playhead(NULL)
+    _playHead(NULL),
+    _hasPlayHeadBeenSet(false)
 {
 }
 
@@ -125,14 +126,14 @@ bool GroovinatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
 void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    // Getting host info from playhead
-    //updatePlayhead();
-    _playhead = getPlayHead();
-    if (_playhead)
+    // Getting host info from playhead (we can only do this from within processBlock,
+    // which is why we keep track of playhead info so we can use it elsewhere)
+    _playHead = getPlayHead();
+    if (_playHead != nullptr)
     {
-        AudioPlayHead::CurrentPositionInfo curPosInfo;
-        _playhead->getCurrentPosition(curPosInfo);
-        _hostBpm = curPosInfo.bpm;
+        _playHead->getCurrentPosition(_playHeadInfo);
+        _hasPlayHeadBeenSet = true;
+        //_hostBpm = curPosInfo.bpm;
     }
     //printf("host bpm: %f\n", getHostBpm());
     
@@ -235,7 +236,17 @@ double GroovinatorAudioProcessor::getHostBpm()
     return _hostBpm;
 }
 
-void GroovinatorAudioProcessor::updatePlayhead()
+AudioPlayHead::CurrentPositionInfo GroovinatorAudioProcessor::getPlayHeadInfo()
 {
-    _playhead = getPlayHead();
+    return _playHeadInfo;
 }
+
+bool GroovinatorAudioProcessor::getHasPlayHeadBeenSet()
+{
+    return _hasPlayHeadBeenSet;
+}
+
+//void GroovinatorAudioProcessor::updateValuesFromPlayHead()
+//{
+//    _hostBpm = _playHeadInfo.bpm;
+//}
