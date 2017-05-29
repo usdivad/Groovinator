@@ -17,7 +17,8 @@
 //==============================================================================
 /**
 */
-class GroovinatorAudioProcessor  : public AudioProcessor
+class GroovinatorAudioProcessor : public AudioProcessor,
+                                  public ChangeBroadcaster
 {
 public:
     //==============================================================================
@@ -63,6 +64,7 @@ public:
 private:
     float _freq;
     soundtouch::SoundTouch _soundTouch;
+    AudioPlayHead* _playhead;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessor)

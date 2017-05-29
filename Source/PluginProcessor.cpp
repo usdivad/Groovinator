@@ -13,19 +13,21 @@
 
 
 //==============================================================================
-GroovinatorAudioProcessor::GroovinatorAudioProcessor()
+GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+    AudioProcessor (BusesProperties()
+                 #if ! JucePlugin_IsMidiEffect
+                  #if ! JucePlugin_IsSynth
+                   .withInput  ("Input",  AudioChannelSet::stereo(), true)
+                  #endif
+                   .withOutput ("Output", AudioChannelSet::stereo(), true)
+                 #endif
+                   ),
 #endif
+    ChangeBroadcaster(),
+    _soundTouch(),
+    _playhead(getPlayHead())
 {
-    //_soundTouch = soundtouch::SoundTouch();
 }
 
 GroovinatorAudioProcessor::~GroovinatorAudioProcessor()
@@ -124,6 +126,16 @@ bool GroovinatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
 void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    // Getting info from playhead
+    if (_playhead)
+    {
+        AudioPlayHead::CurrentPositionInfo curPosInfo;
+        _playhead->getCurrentPosition(curPosInfo);
+        printf("%f\n", curPosInfo.bpm);
+    }
+    
+    // Audio reading and writing
+    //
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
     

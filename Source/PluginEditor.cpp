@@ -25,12 +25,16 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _freqSlider.setRange(-24.0, 24.0); // Semitones
     _freqSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
     _freqSlider.setPopupDisplayEnabled(true, this);
-    _freqSlider.setTextValueSuffix(" Frequency");
+    _freqSlider.setTextValueSuffix(" semitones (pitch-shift)");
     _freqSlider.setValue(0.0);
     _freqSlider.addListener(this);
     
+    // BPM label
+    _bpmLabel.setText("-", dontSendNotification);
+    
     // Add components to editor
     addAndMakeVisible(&_freqSlider);
+    addAndMakeVisible(&_bpmLabel);
 }
 
 GroovinatorAudioProcessorEditor::~GroovinatorAudioProcessorEditor()
@@ -44,8 +48,8 @@ void GroovinatorAudioProcessorEditor::paint (Graphics& g)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
     g.setColour (Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("G R O O V I N A T O R !", 0, 0, getWidth(), 30, Justification::centred, 1);
+    g.setFont (24.0f);
+    g.drawFittedText ("G R O O V I N A T O R", 0, 0, getWidth(), 30, Justification::centred, 1);
 }
 
 void GroovinatorAudioProcessorEditor::resized()
@@ -53,6 +57,7 @@ void GroovinatorAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     _freqSlider.setBounds(30, 40, 20, getHeight()-60);
+    _bpmLabel.setBounds(getWidth()/2, 40, 40, 20);
 }
 
 //
