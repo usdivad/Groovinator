@@ -64,6 +64,10 @@ public:
     int getPlayHeadBarNum();
     int getPlayHeadRelativePulseNum();
     bool getHasPlayHeadBeenSet();
+    
+    // Utility methods
+    int calculateNumSamplesPerMeasure();
+    int calculateNumPulsesPerMeasure();
 
 private:
     //void updateValuesFromPlayHead();
@@ -73,6 +77,7 @@ private:
     AudioPlayHead* _playHead;
     AudioPlayHead::CurrentPositionInfo _playHeadInfo;
     bool _hasPlayHeadBeenSet;
+    double _sampleRate;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessor)

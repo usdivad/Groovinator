@@ -137,6 +137,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     }
     //printf("host bpm: %f\n", getHostBpm());
     
+    // Update sample rate
+    _sampleRate = getSampleRate();
+    
     // Audio reading and writing
     //
     const int totalNumInputChannels  = getTotalNumInputChannels();
@@ -160,6 +163,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         float* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
+
         // Pitch shift
         if (numSamples > 0)
         {
@@ -184,6 +188,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             }
             while (numReceivedSamples != 0 && numReceivedSamples != numSamples);
         }
+        
+        // Tempo stretch and preserve buffer
+        
     }
 }
 
@@ -257,6 +264,41 @@ int GroovinatorAudioProcessor::getPlayHeadBarNum()
 int GroovinatorAudioProcessor::getPlayHeadRelativePulseNum()
 {
     return _playHeadInfo.ppqPosition - _playHeadInfo.ppqPositionOfLastBarStart;
+}
+
+int GroovinatorAudioProcessor::calculateNumPulsesPerMeasure()
+{
+    if (!_hasPlayHeadBeenSet)
+        return 0;
+    
+    return (int) (4.0 * _playHeadInfo.timeSigNumerator / _playHeadInfo.timeSigDenominator);
+}
+
+int GroovinatorAudioProcessor::calculateNumSamplesPerMeasure()
+{
+    if (!_hasPlayHeadBeenSet || _sampleRate == 0)
+        return 0;
+    
+    // BPM
+    double bpm = _playHeadInfo.bpm;
+    double secondsPerBeat = 60.0 / bpm;
+
+    // Pulses (beats)
+    double ppqLastBarStart = _playHeadInfo.ppqPositionOfLastBarStart;
+    int pulsesPerMeasure = calculateNumPulsesPerMeasure();
+    
+    // Time since last edit
+    //double timeInSeconds = _playHeadInfo.timeInSeconds;
+    //int timeInSamples = _playHeadInfo.timeInSamples;
+    //double samplesPerSecond = timeInSamples / timeInSeconds;
+    
+    // ... Or just use sample rate (same result)
+    double samplesPerSecond = _sampleRate;
+    
+    // Calculate number of samples
+    int numSamples = (int) (samplesPerSecond * secondsPerBeat * pulsesPerMeasure);
+    
+    return numSamples;
 }
 
 //void GroovinatorAudioProcessor::updateValuesFromPlayHead()

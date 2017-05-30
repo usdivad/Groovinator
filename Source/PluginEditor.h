@@ -42,6 +42,7 @@ private:
     // UI components
     Slider _freqSlider;
     Label _playHeadInfoLabel;
+    Label _debugLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessorEditor)
 };
