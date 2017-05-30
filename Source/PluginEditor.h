@@ -40,7 +40,7 @@ private:
     GroovinatorAudioProcessor& processor;
     
     // UI components
-    Slider _freqSlider;
+    Slider _testSlider;
     Label _playHeadInfoLabel;
     Label _debugLabel;
 

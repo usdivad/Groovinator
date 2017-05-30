@@ -20,14 +20,15 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     // editor's size to whatever you need it to be.
     setSize (400, 300);
     
-    // Frequency slider
-    _freqSlider.setSliderStyle(Slider::LinearBarVertical);
-    _freqSlider.setRange(-24.0, 24.0); // Semitones
-    _freqSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-    _freqSlider.setPopupDisplayEnabled(true, this);
-    _freqSlider.setTextValueSuffix(" semitones to pitch-shift");
-    _freqSlider.setValue(0.0);
-    _freqSlider.addListener(this);
+    // Test slider (pitch-shift, rate, etc. depending on the need...)
+    _testSlider.setSliderStyle(Slider::LinearBarVertical);
+    //_testSlider.setRange(-24.0, 24.0); // Semitones
+    _testSlider.setRange(0.1, 3.0); // Rate
+    _testSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    _testSlider.setPopupDisplayEnabled(true, this);
+    //_testSlider.setTextValueSuffix(" semitones to pitch-shift");
+    _testSlider.setValue(0.0);
+    _testSlider.addListener(this);
     
     // Playhead info label
     _playHeadInfoLabel.setText("", dontSendNotification);
@@ -38,7 +39,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _debugLabel.setText("", dontSendNotification);
     
     // Add components to editor
-    addAndMakeVisible(&_freqSlider);
+    addAndMakeVisible(&_testSlider);
     addAndMakeVisible(&_playHeadInfoLabel);
     addAndMakeVisible(&_debugLabel);
 
@@ -65,7 +66,7 @@ void GroovinatorAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    _freqSlider.setBounds(30, 80, 20, getHeight()/2);
+    _testSlider.setBounds(30, 80, 20, getHeight()/2);
     _playHeadInfoLabel.setBounds(0, 40, getWidth(), 20);
     _debugLabel.setBounds(0, getHeight()-20, getWidth(), 20);
 }
@@ -73,7 +74,7 @@ void GroovinatorAudioProcessorEditor::resized()
 //
 void GroovinatorAudioProcessorEditor::sliderValueChanged(Slider* slider)
 {
-    processor.setFreq(slider->getValue());
+    processor.setTestSliderValue(slider->getValue());
 }
 
 void GroovinatorAudioProcessorEditor::timerCallback()

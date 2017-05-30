@@ -57,8 +57,8 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
     
     // Custom getters and setters
-    float getFreq();
-    void setFreq(float v);
+    //float getFreq();
+    void setTestSliderValue(float v);
     AudioPlayHead::CurrentPositionInfo getPlayHeadInfo();
     double getPlayHeadBpm();
     int getPlayHeadBarNum(); // WIP
@@ -74,13 +74,14 @@ public:
 private:
     //void updateValuesFromPlayHead();
 
-    float _freq;
+    //float _freq;
     soundtouch::SoundTouch _soundTouch;
     AudioPlayHead* _playHead;
     AudioPlayHead::CurrentPositionInfo _playHeadInfo;
     bool _hasPlayHeadBeenSet;
     double _sampleRate;
     AudioSampleBuffer _measureBuffer;
+    int _mostRecentMeasureBufferSample;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessor)
