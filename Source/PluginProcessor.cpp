@@ -26,7 +26,8 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
 #endif
     _soundTouch(),
     _playHead(NULL),
-    _hasPlayHeadBeenSet(false)
+    _hasPlayHeadBeenSet(false),
+    _hasMeasureBufferBeenSet(false)
 {
 }
 
@@ -168,18 +169,25 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     
     // Create measure buffer to store time-stretched data
     //if (/*_playHeadInfo.timeInSamples == 0 ||*/ calculatePlayHeadRelativePositionInSamples() == 0)
-    if (calculatePlayHeadRelativePositionInSamples() <= numSamples)
+    if (calculatePlayHeadRelativePositionInSamples() <= numSamples || _playHeadInfo.ppqPositionOfLastBarStart != _mostRecentMeasureStartPpq)
     {
-        _measureBuffer = AudioSampleBuffer(totalNumInputChannels, calculateNumSamplesPerMeasure());
-        
+//        if (!_hasMeasureBufferBeenSet)
+//        {
+            _measureBuffer = AudioSampleBuffer(totalNumInputChannels, calculateNumSamplesPerMeasure());
+            _hasMeasureBufferBeenSet = true;
+//        }
+    
         for (int i=0; i<_measureBuffer.getNumChannels(); i++)
             _measureBuffer.clear(i, 0, _measureBuffer.getNumSamples()); // Make sure to clear measure buffer so we don't get a nasty pop when first playing
         
         _mostRecentMeasureBufferSample = std::max(calculatePlayHeadRelativePositionInSamples(), 0); // Reset this value
+        //_mostRecentMeasureBufferSample = 0;
     }
     
     //if (_mostRecentMeasureBufferSample >= _measureBuffer.getNumSamples())
     //    return;
+    
+    _mostRecentMeasureStartPpq = _playHeadInfo.ppqPositionOfLastBarStart;
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -223,7 +231,8 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             _soundTouch.setSampleRate(getSampleRate());
             //_soundTouch.setChannels(totalNumInputChannels);
             _soundTouch.setChannels(1);
-            _soundTouchTempo = 0.5; // Hard-code this to test
+            _soundTouch.setRate(1.0);
+            _soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
             _soundTouch.setTempo(_soundTouchTempo);
             
             // Get input samples
@@ -245,21 +254,42 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                     //printf("%d.%d: received %d of %d samples\n", channel, receiveIterationNum, numReceivedSamples, numSamples);
                     totalNumReceivedSamples += numReceivedSamples;
                 }
-                while (numReceivedSamples != 0 && numReceivedSamples != numOutputSamples);
+                while (numReceivedSamples != 0);
+                //while (numReceivedSamples != 0 && numOutputSamples-totalNumReceivedSamples > 0);
+                //while (numReceivedSamples != 0 && numReceivedSamples != numOutputSamples);
             
                 // Update most recent sample index
                 _mostRecentMeasureBufferSample = std::min(_mostRecentMeasureBufferSample + numOutputSamples, _measureBuffer.getNumSamples()-1);
+                //_mostRecentMeasureBufferSample = std::min(_mostRecentMeasureBufferSample + totalNumReceivedSamples, _measureBuffer.getNumSamples()-1);
             }
-
-            // Write output samples from measure buffer
-            int posInSamples = calculatePlayHeadRelativePositionInSamples();
-            if (posInSamples + numSamples < _mostRecentMeasureBufferSample)
+        }
+        
+        // Write output samples from measure buffer
+        int posInSamples = calculatePlayHeadRelativePositionInSamples();
+        int endPosInSamples = posInSamples + numSamples;
+        if (endPosInSamples < _mostRecentMeasureBufferSample)
+        {
+            // Clear output buffer
+            buffer.clear(channel, 0, buffer.getNumSamples());
+            
+            const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
+            
+            // Write using SoundTouch object
+//            st.setSampleRate(_sampleRate);
+//            st.setChannels(1);
+//            st.putSamples(measureChannelOutputData, numSamples);
+//            int numReceivedSamples = 0;
+//            do
+//            {
+//                numReceivedSamples = st.receiveSamples(channelData, numSamples);
+//            }
+//            while (numReceivedSamples != 0 && numReceivedSamples != numSamples);
+//            
+            
+            // Write manually
+            for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
             {
-                const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
-                for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
-                {
-                    channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
-                }
+                channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
             }
         }
     }
