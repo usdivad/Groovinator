@@ -144,6 +144,11 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         return;
     }
     
+    // For now, no need to process if playhead isn't moving
+    // Eventually a host-independent "live mode" would be nice
+    if (_playHeadInfo.timeInSamples == 0)
+        return;
+    
     // Audio reading and writing
     //
     const int totalNumInputChannels  = getTotalNumInputChannels();
@@ -161,47 +166,12 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         buffer.clear (i, 0, buffer.getNumSamples());
     
     
-    // Create measure buffer and store time-stretched data
-    if (_playHeadInfo.timeInSamples == 0 || calculatePlayHeadRelativePositionInSamples() == 0)
+    // Create measure buffer to store time-stretched data
+    //if (/*_playHeadInfo.timeInSamples == 0 ||*/ calculatePlayHeadRelativePositionInSamples() == 0)
+    if (calculatePlayHeadRelativePositionInSamples() <= numSamples)
     {
         _measureBuffer = AudioSampleBuffer(totalNumInputChannels, calculateNumSamplesPerMeasure());
-        
-        /*
-         if (numSamples > 0)
-         {
-         int posInSamples = calculatePlayHeadRelativePositionInSamples();
-         
-         for (int channel = 0; channel < totalNumInputChannels; ++channel)
-         {
-         // Setup I/O channel pointers
-         const float* inChannelData = buffer.getReadPointer(channel);
-         float* outChannelData = _measureBuffer.getWritePointer (channel, _mostRecentMeasureBufferSample);
-         
-         // Setup SoundTouch
-         _soundTouch.setSampleRate(getSampleRate());
-         //_soundTouch.setChannels(totalNumInputChannels);
-         _soundTouch.setChannels(1);
-         
-         // Get input samples
-         _soundTouch.putSamples(inChannelData, numSamples);
-         
-         // Process and write output samples
-         int totalNumReceivedSamples = 0;
-         int numReceivedSamples = 0;
-         int receiveIterationNum = 0;
-         do
-         {
-         receiveIterationNum++;
-         numReceivedSamples = _soundTouch.receiveSamples(outChannelData, numSamples);
-         //printf("%d.%d: received %d of %d samples\n", channel, receiveIterationNum, numReceivedSamples, numSamples);
-         totalNumReceivedSamples += numReceivedSamples;
-         }
-         while (numReceivedSamples != 0); //&& numReceivedSamples != numSamples);
-         
-         _mostRecentMeasureBufferSample += totalNumReceivedSamples;
-         }
-         }
-         */
+        _mostRecentMeasureBufferSample = calculatePlayHeadRelativePositionInSamples(); // Reset this value
     }
 
     // This is the place where you'd normally do the guts of your plugin's
@@ -240,13 +210,16 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         */
         
         // Tempo stretch and preserve buffer
-        bool canWriteToMeasureBuffer = _measureBuffer.getNumSamples() >= _mostRecentMeasureBufferSample + numSamples;
+        int numOutputSamples = numSamples * _soundTouchTempo;
+        bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
         if (numSamples > 0 && canWriteToMeasureBuffer)
         {
             // Setup SoundTouch
             _soundTouch.setSampleRate(getSampleRate());
             //_soundTouch.setChannels(totalNumInputChannels);
             _soundTouch.setChannels(1);
+            _soundTouchTempo = 0.5; // Hard-code this to test
+            _soundTouch.setTempo(_soundTouchTempo);
             
             // Get input samples
             _soundTouch.putSamples(channelData, numSamples);
@@ -263,14 +236,14 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 //printf("%d.%d: received %d of %d samples\n", channel, receiveIterationNum, numReceivedSamples, numSamples);
                 totalNumReceivedSamples += numReceivedSamples;
             }
-            while (numReceivedSamples != 0 /*&& numReceivedSamples != numSamples*/);
+            while (numReceivedSamples != 0 && numReceivedSamples != numOutputSamples);
             
             // Update most recent sample index
-            _mostRecentMeasureBufferSample += totalNumReceivedSamples;
+            _mostRecentMeasureBufferSample = std::min(_mostRecentMeasureBufferSample + numOutputSamples, _measureBuffer.getNumSamples()-1);
 
             // Write output samples from measure buffer
             int posInSamples = calculatePlayHeadRelativePositionInSamples();
-            if (posInSamples <= _mostRecentMeasureBufferSample + numSamples)
+            if (posInSamples + numSamples < _mostRecentMeasureBufferSample)
             {
                 const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
                 for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
@@ -321,7 +294,10 @@ void GroovinatorAudioProcessor::setTestSliderValue(float v)
     //_freq = v;
     //_soundTouch.setPitchSemiTones(v);
     
-    _soundTouch.setRate(v);
+    //_soundTouch.setRate(v);
+    
+    _soundTouchTempo = v;
+    //_soundTouch.setTempo(v);
 }
 
 //float GroovinatorAudioProcessor::getFreq()
@@ -357,6 +333,16 @@ int GroovinatorAudioProcessor::getPlayHeadRelativePulseNum()
     return _playHeadInfo.ppqPosition - _playHeadInfo.ppqPositionOfLastBarStart;
 }
 
+int GroovinatorAudioProcessor::getMostRecentMeasureBufferSample()
+{
+    return _mostRecentMeasureBufferSample;
+}
+
+int GroovinatorAudioProcessor::getMeasureBufferSize()
+{
+    return _measureBuffer.getNumSamples();
+}
+
 // Utility methods
 
 int GroovinatorAudioProcessor::calculatePlayHeadRelativePositionInSamples()
@@ -370,7 +356,8 @@ int GroovinatorAudioProcessor::calculatePlayHeadRelativePositionInSamples()
     
     //int relativePositionInSamples = (int) (_sampleRate * calculateSecondsPerBeat() * relativePositionInPulses);
     int relativePositionInSamples = (int) (relativePositionInPulses * samplesPerMeasure);
-    return relativePositionInSamples;
+    relativePositionInSamples = relativePositionInSamples >= samplesPerMeasure ? 0 : relativePositionInSamples;
+    return std::max(relativePositionInSamples, 0);
 }
 
 int GroovinatorAudioProcessor::calculateNumPulsesPerMeasure()

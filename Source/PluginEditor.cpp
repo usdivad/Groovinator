@@ -26,8 +26,9 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _testSlider.setRange(0.1, 3.0); // Rate
     _testSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
     _testSlider.setPopupDisplayEnabled(true, this);
-    //_testSlider.setTextValueSuffix(" semitones to pitch-shift");
-    _testSlider.setValue(0.0);
+    _testSlider.setTextValueSuffix(" (test)");
+    //_testSlider.setValue(0.0); // Semitones
+    _testSlider.setValue(1.0); // Rate
     _testSlider.addListener(this);
     
     // Playhead info label
@@ -111,6 +112,8 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                    << "samples per measure: " << String(processor.calculateNumSamplesPerMeasure())
                    //<< ", pulses per measure: " << String(processor.calculateNumPulsesPerMeasure())
                    << ", pos in samples: " << String(processor.calculatePlayHeadRelativePositionInSamples())
+                   << ", most recent sample: " << String(processor.getMostRecentMeasureBufferSample())
+                   << ", measure buf size: " << String(processor.getMeasureBufferSize())
                    << " */";
     _debugLabel.setText(debugLabelText, sendNotification);
 }
