@@ -126,6 +126,9 @@ bool GroovinatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
 void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    // Update sample rate
+    _sampleRate = getSampleRate();
+    
     // Getting host info from playhead (we can only do this from within processBlock,
     // which is why we keep track of playhead info so we can use it elsewhere)
     _playHead = getPlayHead();
@@ -135,10 +138,11 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         _hasPlayHeadBeenSet = true;
         //_hostBpm = curPosInfo.bpm;
     }
-    //printf("host bpm: %f\n", getHostBpm());
-    
-    // Update sample rate
-    _sampleRate = getSampleRate();
+    else
+    {
+        _hasPlayHeadBeenSet = false;
+        return;
+    }
     
     // Audio reading and writing
     //
@@ -158,6 +162,12 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
+    //
+    // Create measure buffer
+    if (_playHeadInfo.timeInSamples == 0 || calculatePlayHeadRelativePositionInSamples() == 0)
+    {
+        _measureBuffer = AudioSampleBuffer(totalNumInputChannels, calculateNumSamplesPerMeasure());
+    }
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         float* channelData = buffer.getWritePointer (channel);
@@ -227,6 +237,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 // Getters and setters
+
 void GroovinatorAudioProcessor::setFreq(float v)
 {
     _freq = v;
@@ -266,6 +277,22 @@ int GroovinatorAudioProcessor::getPlayHeadRelativePulseNum()
     return _playHeadInfo.ppqPosition - _playHeadInfo.ppqPositionOfLastBarStart;
 }
 
+// Utility methods
+
+int GroovinatorAudioProcessor::calculatePlayHeadRelativePositionInSamples()
+{
+    if (!_hasPlayHeadBeenSet)
+        return 0;
+    
+    int samplesPerMeasure = calculateNumSamplesPerMeasure();
+    int pulsesPerMeasure = calculateNumPulsesPerMeasure();
+    double relativePositionInPulses = (_playHeadInfo.ppqPosition - _playHeadInfo.ppqPositionOfLastBarStart) / (double) pulsesPerMeasure;
+    
+    //int relativePositionInSamples = (int) (_sampleRate * calculateSecondsPerBeat() * relativePositionInPulses);
+    int relativePositionInSamples = (int) (relativePositionInPulses * samplesPerMeasure);
+    return relativePositionInSamples;
+}
+
 int GroovinatorAudioProcessor::calculateNumPulsesPerMeasure()
 {
     if (!_hasPlayHeadBeenSet)
@@ -280,11 +307,10 @@ int GroovinatorAudioProcessor::calculateNumSamplesPerMeasure()
         return 0;
     
     // BPM
-    double bpm = _playHeadInfo.bpm;
-    double secondsPerBeat = 60.0 / bpm;
+    double secondsPerBeat = calculateSecondsPerBeat();
 
     // Pulses (beats)
-    double ppqLastBarStart = _playHeadInfo.ppqPositionOfLastBarStart;
+    //double ppqLastBarStart = _playHeadInfo.ppqPositionOfLastBarStart;
     int pulsesPerMeasure = calculateNumPulsesPerMeasure();
     
     // Time since last edit
@@ -299,6 +325,14 @@ int GroovinatorAudioProcessor::calculateNumSamplesPerMeasure()
     int numSamples = (int) (samplesPerSecond * secondsPerBeat * pulsesPerMeasure);
     
     return numSamples;
+}
+
+double GroovinatorAudioProcessor::calculateSecondsPerBeat()
+{
+    if (!_hasPlayHeadBeenSet)
+        return 0.0;
+
+    return 60.0 / _playHeadInfo.bpm;
 }
 
 //void GroovinatorAudioProcessor::updateValuesFromPlayHead()

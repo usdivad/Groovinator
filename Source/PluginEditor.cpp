@@ -108,7 +108,8 @@ void GroovinatorAudioProcessorEditor::timerCallback()
     String debugLabelText;
     debugLabelText << "/* "
                    << "samples per measure: " << String(processor.calculateNumSamplesPerMeasure())
-                   << ", pulses per measure: " << String(processor.calculateNumPulsesPerMeasure())
+                   //<< ", pulses per measure: " << String(processor.calculateNumPulsesPerMeasure())
+                   << ", pos in samples: " << String(processor.calculatePlayHeadRelativePositionInSamples())
                    << " */";
     _debugLabel.setText(debugLabelText, sendNotification);
 }

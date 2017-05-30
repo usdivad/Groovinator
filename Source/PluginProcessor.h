@@ -61,13 +61,15 @@ public:
     void setFreq(float v);
     AudioPlayHead::CurrentPositionInfo getPlayHeadInfo();
     double getPlayHeadBpm();
-    int getPlayHeadBarNum();
-    int getPlayHeadRelativePulseNum();
+    int getPlayHeadBarNum(); // WIP
+    int getPlayHeadRelativePulseNum(); // WIP
     bool getHasPlayHeadBeenSet();
     
     // Utility methods
     int calculateNumSamplesPerMeasure();
     int calculateNumPulsesPerMeasure();
+    int calculatePlayHeadRelativePositionInSamples();
+    double calculateSecondsPerBeat();
 
 private:
     //void updateValuesFromPlayHead();
@@ -78,6 +80,7 @@ private:
     AudioPlayHead::CurrentPositionInfo _playHeadInfo;
     bool _hasPlayHeadBeenSet;
     double _sampleRate;
+    AudioSampleBuffer _measureBuffer;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessor)
