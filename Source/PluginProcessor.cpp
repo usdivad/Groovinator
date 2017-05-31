@@ -154,18 +154,6 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         return;
     }
     
-    // For now, no need to process if playhead isn't moving
-    // Eventually a host-independent "live mode" would be nice
-    int playHeadTimeDiff = _playHeadInfo.timeInSamples - _prevPlayHeadTimeInSamples;
-    _prevPlayHeadTimeInSamples = _playHeadInfo.timeInSamples;
-    if (playHeadTimeDiff == 0)
-    //if (_playHeadInfo.timeInSamples == 0 && playHeadTimeDiff == 0)
-    //if (_playHeadInfo.timeInSamples == 0)
-    {
-        _measuresElapsed = 0;
-        return;
-    }
-    
     // Audio reading and writing
     //
     const int totalNumInputChannels  = getTotalNumInputChannels();
@@ -185,9 +173,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     
     // Create measure buffer to store time-stretched data
     //if (/*_playHeadInfo.timeInSamples == 0 ||*/ calculatePlayHeadRelativePositionInSamples() == 0)
-    if (calculatePlayHeadRelativePositionInSamples() <= numSamples || _playHeadInfo.ppqPositionOfLastBarStart != _mostRecentMeasureStartPpq)
+    if (calculatePlayHeadRelativePositionInSamples() <= numSamples || _playHeadInfo.ppqPositionOfLastBarStart != _mostRecentMeasureStartPpq || _playHeadInfo.timeInSamples == 0)
     {
-        _measureBuffer = AudioSampleBuffer(totalNumInputChannels, calculateNumSamplesPerMeasure());
+        _measureBuffer = AudioSampleBuffer(totalNumInputChannels, calculateNumSamplesPerMeasure() * _soundTouch.getInputOutputRatio());
         _hasMeasureBufferBeenSet = true;
     
         for (int i=0; i<_measureBuffer.getNumChannels(); i++)
@@ -201,7 +189,19 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     
     // Update most recent measure start position
     _mostRecentMeasureStartPpq = _playHeadInfo.ppqPositionOfLastBarStart;
-
+    
+    // For now, no need to process if playhead isn't moving
+    // Eventually a host-independent "live mode" would be nice
+    int playHeadTimeDiff = _playHeadInfo.timeInSamples - _prevPlayHeadTimeInSamples;
+    _prevPlayHeadTimeInSamples = _playHeadInfo.timeInSamples;
+    if (playHeadTimeDiff == 0)
+        //if (_playHeadInfo.timeInSamples == 0 && playHeadTimeDiff == 0)
+        //if (_playHeadInfo.timeInSamples == 0)
+    {
+        _measuresElapsed = 0;
+        return;
+    }
+    
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
