@@ -154,6 +154,16 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         return;
     }
     
+    // Setup SoundTouch
+    _soundTouch.setSampleRate(getSampleRate());
+    //_soundTouch.setChannels(totalNumInputChannels);
+    _soundTouch.setChannels(1);
+    _soundTouch.setRate(1.0);
+    _soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
+    _soundTouch.setTempo(_soundTouchTempo);
+    _soundTouch.setSetting(SETTING_USE_QUICKSEEK, 1);
+   
+    
     // Audio reading and writing
     //
     const int totalNumInputChannels  = getTotalNumInputChannels();
@@ -240,15 +250,6 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         // Tempo stretch and preserve buffer
         if (numSamples > 0)
         {
-            // Setup SoundTouch
-            _soundTouch.setSampleRate(getSampleRate());
-            //_soundTouch.setChannels(totalNumInputChannels);
-            _soundTouch.setChannels(1);
-            _soundTouch.setRate(1.0);
-            _soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
-            _soundTouch.setTempo(_soundTouchTempo);
-            _soundTouch.setSetting(SETTING_USE_QUICKSEEK, 1);
-            
             // Get input samples
             _soundTouch.putSamples(channelData, numSamples);
             
@@ -285,6 +286,8 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 //while (numReceivedSamples != 0 && numOutputSamples-totalNumReceivedSamples > 0);
                 while (numReceivedSamples != 0 && numReceivedSamples != numOutputSamples);
                 //while (numReceivedSamples != 0 && numReceivedSamples != numSamples);
+                //while (numReceivedSamples != 0 || _soundTouch.numUnprocessedSamples() == 0);
+                //while (_soundTouch.numUnprocessedSamples() != 0);
                 
                 // Copy samples from tmp channel to measure channel
                 //_measureBuffer.copyFrom(channel, _mostRecentMeasureBufferSample, tmpBuf, 0, 0, numOutputSamples);
