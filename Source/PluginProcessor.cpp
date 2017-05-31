@@ -187,6 +187,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     //if (_mostRecentMeasureBufferSample >= _measureBuffer.getNumSamples())
     //    return;
     
+    // Update most recent measure start position
     _mostRecentMeasureStartPpq = _playHeadInfo.ppqPositionOfLastBarStart;
 
     // This is the place where you'd normally do the guts of your plugin's
@@ -232,8 +233,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             //_soundTouch.setChannels(totalNumInputChannels);
             _soundTouch.setChannels(1);
             _soundTouch.setRate(1.0);
-            _soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
+            _soundTouchTempo = 1.0; // Hard-code this to test (doesn't work yet for >1.0)
             _soundTouch.setTempo(_soundTouchTempo);
+            _soundTouch.setSetting(SETTING_USE_QUICKSEEK, 1);
             
             // Get input samples
             _soundTouch.putSamples(channelData, numSamples);
@@ -247,49 +249,73 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
             if (canWriteToMeasureBuffer)
             {
+                // Try writing to a temp buffer and then only copying numOutputSamples samples to the actual measure buffer!
+                AudioSampleBuffer tmpBuf = AudioSampleBuffer(1, numOutputSamples);
+                float* tmpChannelData = tmpBuf.getWritePointer(0);
+                
+                // Clear measure buffer following most recent sample
+                _measureBuffer.clear(channel, _mostRecentMeasureBufferSample, numOutputSamples);
+                //_measureBuffer.clear(channel, 0, _measureBuffer.getNumSamples());
+                
+                // Receive samples from SoundTouch
+                //_soundTouch.flush();
                 do
                 {
                     receiveIterationNum++;
                     numReceivedSamples = _soundTouch.receiveSamples(measureChannelData, numOutputSamples);
+                    //numReceivedSamples = _soundTouch.receiveSamples(tmpChannelData, numOutputSamples);
                     //printf("%d.%d: received %d of %d samples\n", channel, receiveIterationNum, numReceivedSamples, numSamples);
                     totalNumReceivedSamples += numReceivedSamples;
                 }
-                while (numReceivedSamples != 0);
+                //while (numReceivedSamples != 0);
+                //while (numReceivedSamples != 0 || numReceivedSamples >= numOutputSamples);
                 //while (numReceivedSamples != 0 && numOutputSamples-totalNumReceivedSamples > 0);
-                //while (numReceivedSamples != 0 && numReceivedSamples != numOutputSamples);
+                while (numReceivedSamples != 0 && numReceivedSamples != numOutputSamples);
+                //while (numReceivedSamples != 0 && numReceivedSamples != numSamples);
+                
+                // Copy samples from tmp channel to measure channel
+                //_measureBuffer.copyFrom(channel, _mostRecentMeasureBufferSample, tmpBuf, 0, 0, numOutputSamples);
             
                 // Update most recent sample index
-                _mostRecentMeasureBufferSample = std::min(_mostRecentMeasureBufferSample + numOutputSamples, _measureBuffer.getNumSamples()-1);
+                _mostRecentMeasureBufferSample += numOutputSamples;
+                //_mostRecentMeasureBufferSample = std::min(_mostRecentMeasureBufferSample + numOutputSamples, _measureBuffer.getNumSamples()-1);
                 //_mostRecentMeasureBufferSample = std::min(_mostRecentMeasureBufferSample + totalNumReceivedSamples, _measureBuffer.getNumSamples()-1);
+                
+                // Clear extraneous samples
+                //_measureBuffer.clear(channel, _mostRecentMeasureBufferSample, _measureBuffer.getNumSamples() - _mostRecentMeasureBufferSample);
             }
-        }
-        
-        // Write output samples from measure buffer
-        int posInSamples = calculatePlayHeadRelativePositionInSamples();
-        int endPosInSamples = posInSamples + numSamples;
-        if (endPosInSamples < _mostRecentMeasureBufferSample)
-        {
-            // Clear output buffer
-            buffer.clear(channel, 0, buffer.getNumSamples());
             
-            const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
-            
-            // Write using SoundTouch object
-//            st.setSampleRate(_sampleRate);
-//            st.setChannels(1);
-//            st.putSamples(measureChannelOutputData, numSamples);
-//            int numReceivedSamples = 0;
-//            do
-//            {
-//                numReceivedSamples = st.receiveSamples(channelData, numSamples);
-//            }
-//            while (numReceivedSamples != 0 && numReceivedSamples != numSamples);
-//            
-            
-            // Write manually
-            for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
+            // Write output samples from measure buffer
+            int posInSamples = calculatePlayHeadRelativePositionInSamples();
+            int endPosInSamples = posInSamples + numSamples;
+            bool canWriteOutput = endPosInSamples < _mostRecentMeasureBufferSample && endPosInSamples < _measureBuffer.getNumSamples();
+            if (canWriteOutput)
             {
-                channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
+                // Clear output buffer
+                buffer.clear(channel, 0, buffer.getNumSamples());
+                
+                const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
+                
+                // Write using SoundTouch object
+                //            st.setSampleRate(_sampleRate);
+                //            st.setChannels(1);
+                //            st.putSamples(measureChannelOutputData, numSamples);
+                //            int numReceivedSamples = 0;
+                //            do
+                //            {
+                //                numReceivedSamples = st.receiveSamples(channelData, numSamples);
+                //            }
+                //            while (numReceivedSamples != 0 && numReceivedSamples != numSamples);
+                //
+                
+                // Write manually
+                for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
+                {
+                    channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
+                }
+                
+                // Write using AudioBuffer::copyFrom
+                //            buffer.copyFrom(channel, 0, _measureBuffer, channel, posInSamples, numSamples);
             }
         }
     }
