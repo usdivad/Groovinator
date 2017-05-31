@@ -61,32 +61,38 @@ public:
     void setTestSliderValue(float v);
     AudioPlayHead::CurrentPositionInfo getPlayHeadInfo();
     double getPlayHeadBpm();
-    int getPlayHeadBarNum(); // WIP
-    int getPlayHeadRelativePulseNum(); // WIP
     bool getHasPlayHeadBeenSet();
     int getMostRecentMeasureBufferSample();
     int getMeasureBufferSize();
     double getSoundTouchTempo() {return _soundTouchTempo;}
+    int getMeasuresElapsed() {return _measuresElapsed;}
     
     // Utility methods
     int calculateNumSamplesPerMeasure();
     int calculateNumPulsesPerMeasure();
     int calculatePlayHeadRelativePositionInSamples();
     double calculateSecondsPerBeat();
+    int getPlayHeadBarNum(); // WIP
+    int getPlayHeadRelativePulseNum(); // WIP
 
 private:
     //void updateValuesFromPlayHead();
 
     //float _freq;
+    double _sampleRate;
+    
     soundtouch::SoundTouch _soundTouch;
+    double _soundTouchTempo;
+
     AudioPlayHead* _playHead;
     AudioPlayHead::CurrentPositionInfo _playHeadInfo;
+    int _prevPlayHeadTimeInSamples;
     bool _hasPlayHeadBeenSet;
-    double _sampleRate;
+    
     AudioSampleBuffer _measureBuffer;
     int _mostRecentMeasureBufferSample;
-    double _soundTouchTempo;
     double _mostRecentMeasureStartPpq;
+    int _measuresElapsed;
     bool _hasMeasureBufferBeenSet;
     
     //==============================================================================

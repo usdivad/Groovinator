@@ -69,7 +69,7 @@ void GroovinatorAudioProcessorEditor::resized()
     // subcomponents in your editor..
     _testSlider.setBounds(30, 80, 20, getHeight()/2);
     _playHeadInfoLabel.setBounds(0, 40, getWidth(), 20);
-    _debugLabel.setBounds(0, getHeight()-20, getWidth(), 20);
+    _debugLabel.setBounds(0, getHeight()-60, getWidth(), 60);
 }
 
 //
@@ -108,13 +108,16 @@ void GroovinatorAudioProcessorEditor::timerCallback()
     
     // Set debug label text
     String debugLabelText;
-    debugLabelText << "/* "
-                   << "sampsPerMeasure=" << String(processor.calculateNumSamplesPerMeasure())
-                   //<< ", pulses per measure: " << String(processor.calculateNumPulsesPerMeasure())
-                   << ", posSamps=" << String(processor.calculatePlayHeadRelativePositionInSamples())
-                   << ", mostRecentSamp=" << String(processor.getMostRecentMeasureBufferSample())
-                   << ", soundTouchTempo=" << String(processor.getSoundTouchTempo())
-                   << ", measureBufSz=" << String(processor.getMeasureBufferSize())
-                   << " */";
+    debugLabelText  << "/* "
+                    << "sampsPerMeasure=" << String(processor.calculateNumSamplesPerMeasure())
+                    //<< ", pulses per measure: " << String(processor.calculateNumPulsesPerMeasure())
+                    << ", posSamps=" << String(processor.calculatePlayHeadRelativePositionInSamples())
+                    << ", mostRecentSamp=" << String(processor.getMostRecentMeasureBufferSample())
+                    << ", diff=" << String(processor.getMostRecentMeasureBufferSample()-processor.calculatePlayHeadRelativePositionInSamples())
+                    //<< ", soundTouchTempo=" << String(processor.getSoundTouchTempo())
+                    << ", measureBufSz=" << String(processor.getMeasureBufferSize())
+                    << "\n"
+                    << ", measureNum=" << String(processor.getMeasuresElapsed())
+                    << " */";
     _debugLabel.setText(debugLabelText, sendNotification);
 }

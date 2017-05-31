@@ -25,8 +25,17 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
                    ),
 #endif
     _soundTouch(),
+    _soundTouchTempo(1.0),
+
     _playHead(NULL),
+    _playHeadInfo(),
+    _prevPlayHeadTimeInSamples(0),
     _hasPlayHeadBeenSet(false),
+
+    _measureBuffer(),
+    _mostRecentMeasureBufferSample(0),
+    _mostRecentMeasureStartPpq(0.0),
+    _measuresElapsed(0),
     _hasMeasureBufferBeenSet(false)
 {
 }
@@ -147,8 +156,15 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     
     // For now, no need to process if playhead isn't moving
     // Eventually a host-independent "live mode" would be nice
-    if (_playHeadInfo.timeInSamples == 0)
+    int playHeadTimeDiff = _playHeadInfo.timeInSamples - _prevPlayHeadTimeInSamples;
+    _prevPlayHeadTimeInSamples = _playHeadInfo.timeInSamples;
+    if (playHeadTimeDiff == 0)
+    //if (_playHeadInfo.timeInSamples == 0 && playHeadTimeDiff == 0)
+    //if (_playHeadInfo.timeInSamples == 0)
+    {
+        _measuresElapsed = 0;
         return;
+    }
     
     // Audio reading and writing
     //
@@ -171,21 +187,17 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     //if (/*_playHeadInfo.timeInSamples == 0 ||*/ calculatePlayHeadRelativePositionInSamples() == 0)
     if (calculatePlayHeadRelativePositionInSamples() <= numSamples || _playHeadInfo.ppqPositionOfLastBarStart != _mostRecentMeasureStartPpq)
     {
-//        if (!_hasMeasureBufferBeenSet)
-//        {
-            _measureBuffer = AudioSampleBuffer(totalNumInputChannels, calculateNumSamplesPerMeasure());
-            _hasMeasureBufferBeenSet = true;
-//        }
+        _measureBuffer = AudioSampleBuffer(totalNumInputChannels, calculateNumSamplesPerMeasure());
+        _hasMeasureBufferBeenSet = true;
     
         for (int i=0; i<_measureBuffer.getNumChannels(); i++)
             _measureBuffer.clear(i, 0, _measureBuffer.getNumSamples()); // Make sure to clear measure buffer so we don't get a nasty pop when first playing
         
         _mostRecentMeasureBufferSample = std::max(calculatePlayHeadRelativePositionInSamples(), 0); // Reset this value
         //_mostRecentMeasureBufferSample = 0;
+        
+        _measuresElapsed++;
     }
-    
-    //if (_mostRecentMeasureBufferSample >= _measureBuffer.getNumSamples())
-    //    return;
     
     // Update most recent measure start position
     _mostRecentMeasureStartPpq = _playHeadInfo.ppqPositionOfLastBarStart;
@@ -284,6 +296,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 // Clear extraneous samples
                 //_measureBuffer.clear(channel, _mostRecentMeasureBufferSample, _measureBuffer.getNumSamples() - _mostRecentMeasureBufferSample);
             }
+            
+            // Clear output buffer
+            //buffer.clear(channel, 0, buffer.getNumSamples());
             
             // Write output samples from measure buffer
             int posInSamples = calculatePlayHeadRelativePositionInSamples();
