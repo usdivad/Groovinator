@@ -285,6 +285,9 @@ public:
 
     /// Returns number of samples currently unprocessed.
     virtual uint numUnprocessedSamples() const;
+    
+    /// 
+    double getInputOutputRatio();
 
 
     /// Other handy functions that are implemented in the ancestor classes (see

@@ -245,7 +245,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             //_soundTouch.setChannels(totalNumInputChannels);
             _soundTouch.setChannels(1);
             _soundTouch.setRate(1.0);
-            _soundTouchTempo = 1.0; // Hard-code this to test (doesn't work yet for >1.0)
+            _soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
             _soundTouch.setTempo(_soundTouchTempo);
             _soundTouch.setSetting(SETTING_USE_QUICKSEEK, 1);
             
@@ -257,7 +257,8 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             int totalNumReceivedSamples = 0;
             int numReceivedSamples = 0;
             int receiveIterationNum = 0;
-            int numOutputSamples = (int) (numSamples / _soundTouchTempo);
+            //int numOutputSamples = (int) (numSamples / _soundTouchTempo);
+            int numOutputSamples = (int) (_soundTouch.getInputOutputRatio() * numSamples);
             bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
             if (canWriteToMeasureBuffer)
             {
@@ -297,8 +298,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 //_measureBuffer.clear(channel, _mostRecentMeasureBufferSample, _measureBuffer.getNumSamples() - _mostRecentMeasureBufferSample);
             }
             
-            // Clear output buffer
-            //buffer.clear(channel, 0, buffer.getNumSamples());
+            // Clear output buffer (so we don't get remnants of the original,
+            // esp when nothing is written to output)
+            buffer.clear(channel, 0, buffer.getNumSamples());
             
             // Write output samples from measure buffer
             int posInSamples = calculatePlayHeadRelativePositionInSamples();
@@ -307,7 +309,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             if (canWriteOutput)
             {
                 // Clear output buffer
-                buffer.clear(channel, 0, buffer.getNumSamples());
+                //buffer.clear(channel, 0, buffer.getNumSamples());
                 
                 const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
                 

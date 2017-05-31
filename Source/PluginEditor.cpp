@@ -118,6 +118,7 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                     << ", measureBufSz=" << String(processor.getMeasureBufferSize())
                     << "\n"
                     << ", measureNum=" << String(processor.getMeasuresElapsed())
+                    << ", ioRatio=" << String(processor.getSoundTouchInputOutputRatio(), 2)
                     << " */";
     _debugLabel.setText(debugLabelText, sendNotification);
 }

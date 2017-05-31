@@ -524,3 +524,9 @@ uint SoundTouch::receiveSamples(uint maxSamples)
 	samplesOutput += (long)ret;
 	return ret;
 }
+
+double SoundTouch::getInputOutputRatio()
+{
+    return 1.0 / ((double)tempo * (double)rate);
+}
+

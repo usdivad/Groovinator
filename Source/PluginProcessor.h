@@ -66,6 +66,7 @@ public:
     int getMeasureBufferSize();
     double getSoundTouchTempo() {return _soundTouchTempo;}
     int getMeasuresElapsed() {return _measuresElapsed;}
+    double getSoundTouchInputOutputRatio() {return _soundTouch.getInputOutputRatio();}
     
     // Utility methods
     int calculateNumSamplesPerMeasure();
