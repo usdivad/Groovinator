@@ -159,7 +159,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     //_soundTouch.setChannels(totalNumInputChannels);
     _soundTouch.setChannels(1);
     _soundTouch.setRate(1.0);
-    _soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
+    //_soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
     _soundTouch.setTempo(_soundTouchTempo);
     _soundTouch.setSetting(SETTING_USE_QUICKSEEK, 1);
    
@@ -429,6 +429,22 @@ int GroovinatorAudioProcessor::getMeasureBufferSize()
 {
     return _measureBuffer.getNumSamples();
 }
+
+double GroovinatorAudioProcessor::getSoundTouchTempo()
+{
+    return _soundTouchTempo;
+}
+
+int GroovinatorAudioProcessor::getMeasuresElapsed()
+{
+    return _measuresElapsed;
+}
+
+double GroovinatorAudioProcessor::getSoundTouchInputOutputRatio()
+{
+    return _soundTouch.getInputOutputRatio();
+}
+
 
 // Utility methods
 

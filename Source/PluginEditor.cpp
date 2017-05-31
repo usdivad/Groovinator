@@ -21,12 +21,13 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     setSize (400, 300);
     
     // Test slider (pitch-shift, rate, etc. depending on the need...)
-    _testSlider.setSliderStyle(Slider::LinearBarVertical);
+    _testSlider.setSliderStyle(Slider::LinearVertical);
     //_testSlider.setRange(-24.0, 24.0); // Semitones
     _testSlider.setRange(0.1, 3.0); // Rate
-    _testSlider.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+    _testSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 20);
+    //_testSlider.showTextBox();
     _testSlider.setPopupDisplayEnabled(true, this);
-    _testSlider.setTextValueSuffix(" (test)");
+    //_testSlider.setTextValueSuffix(" (test)");
     //_testSlider.setValue(0.0); // Semitones
     _testSlider.setValue(1.0); // Rate
     _testSlider.addListener(this);
@@ -67,7 +68,7 @@ void GroovinatorAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    _testSlider.setBounds(30, 80, 20, getHeight()/2);
+    _testSlider.setBounds(30, 80, 50, (getHeight()/2));
     _playHeadInfoLabel.setBounds(0, 40, getWidth(), 20);
     _debugLabel.setBounds(0, getHeight()-60, getWidth(), 60);
 }

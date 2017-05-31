@@ -64,9 +64,9 @@ public:
     bool getHasPlayHeadBeenSet();
     int getMostRecentMeasureBufferSample();
     int getMeasureBufferSize();
-    double getSoundTouchTempo() {return _soundTouchTempo;}
-    int getMeasuresElapsed() {return _measuresElapsed;}
-    double getSoundTouchInputOutputRatio() {return _soundTouch.getInputOutputRatio();}
+    double getSoundTouchTempo();
+    int getMeasuresElapsed();
+    double getSoundTouchInputOutputRatio();
     
     // Utility methods
     int calculateNumSamplesPerMeasure();
