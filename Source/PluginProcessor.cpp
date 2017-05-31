@@ -191,8 +191,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         for (int i=0; i<_measureBuffer.getNumChannels(); i++)
             _measureBuffer.clear(i, 0, _measureBuffer.getNumSamples()); // Make sure to clear measure buffer so we don't get a nasty pop when first playing
         
-        _mostRecentMeasureBufferSample = std::max(calculatePlayHeadRelativePositionInSamples(), 0); // Reset this value
-        //_mostRecentMeasureBufferSample = 0;
+        // Reset most recent _measureBuffer sample index
+        //_mostRecentMeasureBufferSample = std::max(calculatePlayHeadRelativePositionInSamples(), 0);
+        _mostRecentMeasureBufferSample = 0;
         
         _measuresElapsed++;
     }
