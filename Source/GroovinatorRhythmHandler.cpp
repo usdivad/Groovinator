@@ -14,7 +14,7 @@
 
 GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalNumSteps(8), _originalRhythm(8, 0), _targetNumSteps(8), _targetRhythm(8, 0)
 {
-    _originalRhythm[0] = 1;
+    //_originalRhythm[0] = 1; // Testing
 }
 
 GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalNumSteps(_originalNumSteps), _originalRhythm(originalNumSteps, 0), _targetNumSteps(targetNumSteps), _targetRhythm(targetNumSteps, 0)
@@ -91,7 +91,22 @@ void GroovinatorRhythmHandler::setTargetRhythm(std::vector<int> r)
     _targetNumSteps = r.size();
 }
 
-// Methods
+// Utility methods
+void GroovinatorRhythmHandler::toggleOriginalRhythmStepAt(int i)
+{
+    if (i < 0 || i >= _originalRhythm.size())
+        return;
+    _originalRhythm[i] = _originalRhythm[i] == 1 ? 0 : 1;
+}
+
+void GroovinatorRhythmHandler::toggleTargetRhythmStepAt(int i)
+{
+    if (i < 0 || i >= _targetRhythm.size())
+        return;
+    _targetRhythm[i] = _targetRhythm[i] == 1 ? 0 : 1;
+}
+
+// Static methods
 std::vector<int> GroovinatorRhythmHandler::generateEuclideanRhythm(int numPulses, int numSteps)
 {
     std::vector<int> rhythm;

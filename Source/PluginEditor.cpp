@@ -223,8 +223,8 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                     << ", ioRatio=" << String(processor.getSoundTouchInputOutputRatio(), 2)
     
                     // Rhythm
-                    << ", origRhythm=" << String(GroovinatorRhythmHandler::rhythmToString(GroovinatorRhythmHandler::generateEuclideanRhythm(3, rhythmHandler.getOriginalNumSteps())))
-                    << ", trgtRhythm=" << String(GroovinatorRhythmHandler::rhythmToString(GroovinatorRhythmHandler::generateEuclideanRhythm(3, rhythmHandler.getTargetNumSteps())))
+                    << ", origRhythm=" << rhythmHandler.getOriginalRhythmStr()
+                    << ", trgtRhythm=" << rhythmHandler.getTargetRhythmStr()
     
                     << " */";
     _debugLabel.setText(debugLabelText, sendNotification);

@@ -29,7 +29,8 @@ public:
 //==============================================================================
 /**
  */
-class GroovinatorUIRhythmComponent : public Component
+class GroovinatorUIRhythmComponent : public Component,
+                                     public Button::Listener
 {
 public:
     enum RhythmComponentType
@@ -40,6 +41,7 @@ public:
     
     GroovinatorUIRhythmComponent(RhythmComponentType rhythmType, GroovinatorRhythmHandler& rhythmHandler);
     void paint(Graphics& g) override;
+    void buttonClicked(Button* button) override;
     
     void setRhythmHandler(GroovinatorRhythmHandler& rhythmHandler);
 private:

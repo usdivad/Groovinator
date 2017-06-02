@@ -35,6 +35,10 @@ public:
     void setOriginalRhythm(std::vector<int> r);
     void setTargetRhythm(std::vector<int> r);
     
+    // Utility methods
+    void toggleOriginalRhythmStepAt(int i);
+    void toggleTargetRhythmStepAt(int i);
+    
     // Static methods
     static std::vector<int> generateEuclideanRhythm(int numPulses, int numSteps);
     static std::string rhythmToString(std::vector<int> rhythm);

@@ -41,7 +41,21 @@ GroovinatorUIRhythmComponent::GroovinatorUIRhythmComponent(RhythmComponentType r
 void GroovinatorUIRhythmComponent::setRhythmHandler(GroovinatorRhythmHandler& rhythmHandler)
 {
     _rhythmHandler = rhythmHandler;
-    printf("rhythm handler has been reset: %s\n", GroovinatorRhythmHandler::rhythmToString(rhythmHandler.getOriginalRhythm()).c_str());
+    printf("rhythm handler has been reset: %s + %s\n", rhythmHandler.getOriginalRhythmStr().c_str(), rhythmHandler.getTargetRhythmStr().c_str());
+}
+
+void GroovinatorUIRhythmComponent::buttonClicked(Button* button)
+{
+    int buttonIdx = _stepButtons.indexOf((const GroovinatorUIStepButton*) button);
+    if (buttonIdx >=0)
+    {
+        if (_rhythmType == kOriginalRhythm)
+            _rhythmHandler.toggleOriginalRhythmStepAt(buttonIdx);
+        else if (_rhythmType == kTargetRhythm)
+            _rhythmHandler.toggleTargetRhythmStepAt(buttonIdx);
+        
+        repaint();
+    }
 }
 
 
@@ -75,6 +89,8 @@ void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
             buttonName  << rhythmTypeName << "Step" << i;
             
             GroovinatorUIStepButton* stepButton = new GroovinatorUIStepButton(buttonName);
+            stepButton->addListener(this);
+            
             addAndMakeVisible(stepButton);
             _stepButtons.add(stepButton);
             
