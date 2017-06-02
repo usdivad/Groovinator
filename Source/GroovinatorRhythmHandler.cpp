@@ -14,7 +14,7 @@
 
 GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalNumSteps(8), _originalRhythm(8, 0), _targetNumSteps(8), _targetRhythm(8, 0)
 {
-    
+    _originalRhythm[0] = 1;
 }
 
 GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalNumSteps(_originalNumSteps), _originalRhythm(originalNumSteps, 0), _targetNumSteps(targetNumSteps), _targetRhythm(targetNumSteps, 0)

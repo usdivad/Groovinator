@@ -23,7 +23,7 @@ void GroovinatorUIStepButton::paintButton(Graphics& g, bool isMouseOverButton, b
     }
     else if (isMouseOverButton)
     {
-        g.fillAll(Colours::lightgrey);
+        g.fillAll(Colours::purple);
     }
     else
     {
@@ -87,15 +87,17 @@ void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
     
     Rectangle<int> bounds = getBounds();
     double stepButtonWidth = bounds.getWidth() / (double) numSteps;
-    double stepButtonPulseHeight = bounds.getHeight() * 0.75;
-    double stepButtonStepHeight = bounds.getHeight() * 0.5;
+    double stepButtonPulseHeight = bounds.getHeight();
+    double stepButtonStepHeight = bounds.getHeight() * 0.3;
     
     for (int i=0; i<numSteps; i++)
     {
         GroovinatorUIStepButton* stepButton = _stepButtons[i];
         double stepButtonX = i * stepButtonWidth;
-        double stepButtonY = getHeight() / 2.0;
+        //double stepButtonY = getHeight() / 2.0;
+        double stepButtonY = 0.0;
         double stepButtonHeight = rhythm[i] == 1 ? stepButtonPulseHeight : stepButtonStepHeight;
+        stepButtonY = rhythm[i] == 1 ?  stepButtonY : stepButtonY + (getHeight()-stepButtonHeight+1);
         stepButton->setBounds(stepButtonX, stepButtonY, stepButtonWidth, stepButtonHeight);
     }
 }
