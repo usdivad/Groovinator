@@ -21,7 +21,7 @@ GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int tar
 {
 }
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, std::vector<int> originalRhythm, int targetNumSteps, std::vector<int> targetRhythm) : _originalNumSteps(originalNumSteps), _originalRhythm(originalRhythm), _targetNumSteps(targetNumSteps), _targetRhythm(targetRhythm)
+GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, RhythmSequence originalRhythm, int targetNumSteps, RhythmSequence targetRhythm) : _originalNumSteps(originalNumSteps), _originalRhythm(originalRhythm), _targetNumSteps(targetNumSteps), _targetRhythm(targetRhythm)
 {
     
 }
@@ -41,12 +41,12 @@ int GroovinatorRhythmHandler::getTargetNumSteps()
     return _targetNumSteps;
 }
 
-std::vector<int> GroovinatorRhythmHandler::getOriginalRhythm()
+GroovinatorRhythmHandler::RhythmSequence GroovinatorRhythmHandler::getOriginalRhythm()
 {
     return _originalRhythm;
 }
 
-std::vector<int> GroovinatorRhythmHandler::getTargetRhythm()
+GroovinatorRhythmHandler::RhythmSequence GroovinatorRhythmHandler::getTargetRhythm()
 {
     return _targetRhythm;
 }
@@ -79,13 +79,13 @@ void GroovinatorRhythmHandler::setTargetNumSteps(int v)
     //_targetRhythm = GroovinatorRhythmHandler::generateEuclideanRhythm(3, v);
 }
 
-void GroovinatorRhythmHandler::setOriginalRhythm(std::vector<int> r)
+void GroovinatorRhythmHandler::setOriginalRhythm(RhythmSequence r)
 {
     _originalRhythm = r;
     _originalNumSteps = r.size();
 }
 
-void GroovinatorRhythmHandler::setTargetRhythm(std::vector<int> r)
+void GroovinatorRhythmHandler::setTargetRhythm(RhythmSequence r)
 {
     _targetRhythm = r;
     _targetNumSteps = r.size();
@@ -107,9 +107,9 @@ void GroovinatorRhythmHandler::toggleTargetRhythmStepAt(int i)
 }
 
 // Static methods
-std::vector<int> GroovinatorRhythmHandler::generateEuclideanRhythm(int numPulses, int numSteps)
+GroovinatorRhythmHandler::RhythmSequence GroovinatorRhythmHandler::generateEuclideanRhythm(int numPulses, int numSteps)
 {
-    std::vector<int> rhythm;
+    RhythmSequence rhythm;
     std::string rhythmStr = BjorklundsAlgorithm::bjorklund(numPulses, numSteps);
     for (size_t i=0; i<rhythmStr.size(); i++)
     {
@@ -121,7 +121,7 @@ std::vector<int> GroovinatorRhythmHandler::generateEuclideanRhythm(int numPulses
     return rhythm;
 }
 
-std::string GroovinatorRhythmHandler::rhythmToString(std::vector<int> rhythm)
+std::string GroovinatorRhythmHandler::rhythmToString(RhythmSequence rhythm)
 {
     std::stringstream ss;
     for (size_t i=0; i<rhythm.size(); i++)

@@ -62,7 +62,7 @@ void GroovinatorUIRhythmComponent::buttonClicked(Button* button)
 void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
 {
     // Get rhythm data
-    std::vector<int> rhythm;
+    GroovinatorRhythmHandler::RhythmSequence rhythm;
     if (_rhythmType == kOriginalRhythm)
     {
         rhythm = _rhythmHandler.getOriginalRhythm();

@@ -15,39 +15,41 @@
 class GroovinatorRhythmHandler
 {
 public:
+    typedef std::vector<int> RhythmSequence;
+    
     GroovinatorRhythmHandler();
     GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps);
-    GroovinatorRhythmHandler(int originalNumSteps, std::vector<int> originalRhythm,
-                             int targetNumSteps, std::vector<int> targetRhythm);
+    GroovinatorRhythmHandler(int originalNumSteps, RhythmSequence originalRhythm,
+                             int targetNumSteps, RhythmSequence targetRhythm);
     ~GroovinatorRhythmHandler();
     
     // Getters
     int getOriginalNumSteps();
     int getTargetNumSteps();
-    std::vector<int> getOriginalRhythm();
-    std::vector<int> getTargetRhythm();
+    RhythmSequence getOriginalRhythm();
+    RhythmSequence getTargetRhythm();
     std::string getOriginalRhythmStr();
     std::string getTargetRhythmStr();
     
     // Setters
     void setOriginalNumSteps(int v);
     void setTargetNumSteps(int v);
-    void setOriginalRhythm(std::vector<int> r);
-    void setTargetRhythm(std::vector<int> r);
+    void setOriginalRhythm(RhythmSequence r);
+    void setTargetRhythm(RhythmSequence r);
     
     // Utility methods
     void toggleOriginalRhythmStepAt(int i);
     void toggleTargetRhythmStepAt(int i);
     
     // Static methods
-    static std::vector<int> generateEuclideanRhythm(int numPulses, int numSteps);
-    static std::string rhythmToString(std::vector<int> rhythm);
+    static RhythmSequence generateEuclideanRhythm(int numPulses, int numSteps);
+    static std::string rhythmToString(RhythmSequence rhythm);
 
 private:
     int _originalNumSteps;
-    std::vector<int> _originalRhythm;
+    RhythmSequence _originalRhythm;
     int _targetNumSteps;
-    std::vector<int> _targetRhythm;
+    RhythmSequence _targetRhythm;
 };
 
 #endif /* GroovinatorRhythmHandler_h */
