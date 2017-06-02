@@ -44,6 +44,9 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     //==============================================================================
     //Rhythm
     
+    // Rectangles
+    //_originalRhythmBgRect
+    
     // Num steps
     _originalNumStepsSlider.setSliderStyle(Slider::IncDecButtons);
     _originalNumStepsSlider.setRange(1, 99, 1);
@@ -83,34 +86,53 @@ void GroovinatorAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
+    
+    // TODO: Use LookAndFeel for all the colors etc.
+    
+    // Title
     g.setColour (Colours::white);
     g.setFont (24.0f);
     g.drawFittedText ("G R O O V I N A T O R", 0, 0, getWidth(), 30, Justification::centred, 1);
+    
+    // Rhythm boxes
+    g.setColour(Colours::darkslategrey);
+    g.fillRect(_originalRhythmBgRect);
+    g.fillRect(_targetRhythmBgRect);
 }
 
 void GroovinatorAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    _testSlider.setBounds(0, 80, 30, (getHeight()/2));
+    _testSlider.setBounds(5, 80, 10, (getHeight()/2));
     _playHeadInfoLabel.setBounds(0, 40, getWidth(), 20);
     _debugLabel.setBounds(0, getHeight()-60, getWidth(), 60);
     
     
     // Rhythm components
+    // Component positions will generally go in the format:
+    // .setBounds(<componentName>X, <original/target>RhythmY + <componentName>YOffset, <componentName>Width, <componentName>Height)
     double originalRhythmY = 80;
     double targetRhythmY = originalRhythmY + 100;
     
-    double numStepsX = getWidth()-80;
+    double rhythmBgRectX = 20;
+    double rhythmBgRectYOffset = 0;
+    double rhythmBgRectWidth = (getWidth() - (2*rhythmBgRectX)) * 0.8;
+    double rhythmBgRectHeight = 75;
+    
+    double numStepsWidth = 60;
+    double numStepsX = getWidth() - rhythmBgRectX - numStepsWidth; // rhythmBgRectX + rhythmBgRectWidth + 10;
     
     double numStepsLabelYOffset = 0;
-    double numStepsLabelWidth = 60;
+    double numStepsLabelWidth = numStepsWidth;
     double numStepsLabelHeight = 20;
     
     double numStepsSliderYOffset = 20;
-    double numStepsSliderWidth = 60;
+    double numStepsSliderWidth = numStepsWidth;
     double numStepsSliderHeight = 50;
+    
+    _originalRhythmBgRect.setBounds(rhythmBgRectX, originalRhythmY + rhythmBgRectYOffset, rhythmBgRectWidth, rhythmBgRectHeight);
+    _targetRhythmBgRect.setBounds(rhythmBgRectX, targetRhythmY + rhythmBgRectYOffset, rhythmBgRectWidth, rhythmBgRectHeight);
     
     _originalNumStepsLabel.setBounds(numStepsX, originalRhythmY + numStepsLabelYOffset, numStepsLabelWidth, numStepsLabelHeight);
     _originalNumStepsSlider.setBounds(numStepsX, originalRhythmY + numStepsSliderYOffset, numStepsSliderWidth, numStepsSliderHeight);

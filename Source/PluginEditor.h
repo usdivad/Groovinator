@@ -43,10 +43,20 @@ private:
     Slider _testSlider;
     Label _playHeadInfoLabel;
     Label _debugLabel;
+    Rectangle<int> _originalRhythmBgRect;
+    Rectangle<int> _targetRhythmBgRect;
     Label _originalNumStepsLabel;
     Slider _originalNumStepsSlider;
     Label _targetNumStepsLabel;
     Slider _targetNumStepsSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessorEditor)
+};
+
+//==============================================================================
+/**
+ */
+class GroovinatorStepButton : public Button
+{
+    
 };
