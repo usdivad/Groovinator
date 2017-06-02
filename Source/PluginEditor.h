@@ -43,6 +43,7 @@ private:
     Slider _testSlider;
     Label _playHeadInfoLabel;
     Label _debugLabel;
+    Slider _originalNumStepsSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessorEditor)
 };

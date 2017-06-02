@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Groovinator", "Groovinator"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{7EE99019-34FC-0E3C-B519-17E9E3819ED2}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\Source\GroovinatorRhythmHandler.cpp = ..\..\Source\GroovinatorRhythmHandler.cpp
+		..\..\Source\GroovinatorRhythmHandler.h = ..\..\Source\GroovinatorRhythmHandler.h
 		..\..\Source\PluginProcessor.cpp = ..\..\Source\PluginProcessor.cpp
 		..\..\Source\PluginProcessor.h = ..\..\Source\PluginProcessor.h
 		..\..\Source\PluginEditor.cpp = ..\..\Source\PluginEditor.cpp

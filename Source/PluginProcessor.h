@@ -13,6 +13,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "SoundTouch.h"
 
+#include "GroovinatorRhythmHandler.h"
+
 
 //==============================================================================
 /**
@@ -56,9 +58,8 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    // Custom getters and setters
+    // Custom getters...
     //float getFreq();
-    void setTestSliderValue(float v);
     AudioPlayHead::CurrentPositionInfo getPlayHeadInfo();
     double getPlayHeadBpm();
     bool getHasPlayHeadBeenSet();
@@ -67,6 +68,10 @@ public:
     double getSoundTouchTempo();
     int getMeasuresElapsed();
     double getSoundTouchInputOutputRatio();
+    
+    // ... and custom setters
+    void setTestSliderValue(float v);
+    void setOriginalNumSteps(float v);
     
     // Utility methods
     int calculateNumSamplesPerMeasure();
@@ -79,6 +84,8 @@ public:
 private:
     //void updateValuesFromPlayHead();
 
+    //==============================================================================
+    // Audio playback stuff
     //float _freq;
     double _sampleRate;
     
@@ -95,6 +102,10 @@ private:
     double _mostRecentMeasureStartPpq;
     int _measuresElapsed;
     bool _hasMeasureBufferBeenSet;
+    
+    //==============================================================================
+    // Symbolic rhythm
+    GroovinatorRhythmHandler _rhythmHandler;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessor)

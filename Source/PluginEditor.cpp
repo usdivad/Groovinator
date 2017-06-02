@@ -40,10 +40,23 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _debugLabel.setFont(10.0f);
     _debugLabel.setText("", dontSendNotification);
     
+    
+    //==============================================================================
+    //Rhythm
+    
+    // Num steps
+    _originalNumStepsSlider.setSliderStyle(Slider::IncDecButtons);
+    _originalNumStepsSlider.setRange(1, 104, 1);
+    _originalNumStepsSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 30, 20);
+    _originalNumStepsSlider.setPopupDisplayEnabled(true, this);
+    _originalNumStepsSlider.setValue(0);
+    _originalNumStepsSlider.addListener(this);
+    
     // Add components to editor
     addAndMakeVisible(&_testSlider);
     addAndMakeVisible(&_playHeadInfoLabel);
     addAndMakeVisible(&_debugLabel);
+    addAndMakeVisible(&_originalNumStepsSlider);
 
     // Start timer
     startTimer(50);
@@ -71,12 +84,23 @@ void GroovinatorAudioProcessorEditor::resized()
     _testSlider.setBounds(30, 80, 50, (getHeight()/2));
     _playHeadInfoLabel.setBounds(0, 40, getWidth(), 20);
     _debugLabel.setBounds(0, getHeight()-60, getWidth(), 60);
+    _originalNumStepsSlider.setBounds(getWidth()-60, 80, 50, 50);
 }
 
 //
 void GroovinatorAudioProcessorEditor::sliderValueChanged(Slider* slider)
 {
-    processor.setTestSliderValue(slider->getValue());
+    double v = slider->getValue();
+    if (slider == &_testSlider)
+    {
+        processor.setTestSliderValue(v);
+        printf("test slider changed");
+    }
+    else if (slider == &_originalNumStepsSlider)
+    {
+        processor.setOriginalNumSteps(v);
+        printf("origina num steps slider changed");
+    }
 }
 
 void GroovinatorAudioProcessorEditor::timerCallback()

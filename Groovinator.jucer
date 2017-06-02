@@ -13,6 +13,10 @@
               companyWebsite="http://usdivad.com/" companyName="David Su">
   <MAINGROUP id="MkOCXr" name="Groovinator">
     <GROUP id="{60559372-F89F-A8A0-C0E7-E4A3DE981D88}" name="Source">
+      <FILE id="tj5Hlr" name="GroovinatorRhythmHandler.cpp" compile="1" resource="0"
+            file="Source/GroovinatorRhythmHandler.cpp"/>
+      <FILE id="hSDG7Y" name="GroovinatorRhythmHandler.h" compile="0" resource="0"
+            file="Source/GroovinatorRhythmHandler.h"/>
       <FILE id="faq17B" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="TQLTPK" name="PluginProcessor.h" compile="0" resource="0"

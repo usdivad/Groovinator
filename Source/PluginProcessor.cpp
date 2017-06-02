@@ -374,18 +374,7 @@ AudioProcessor* JUCE_CALLTYPE createPluginFilter()
     return new GroovinatorAudioProcessor();
 }
 
-// Getters and setters
-
-void GroovinatorAudioProcessor::setTestSliderValue(float v)
-{
-    //_freq = v;
-    //_soundTouch.setPitchSemiTones(v);
-    
-    //_soundTouch.setRate(v);
-    
-    _soundTouchTempo = v;
-    //_soundTouch.setTempo(v);
-}
+// Getters
 
 //float GroovinatorAudioProcessor::getFreq()
 //{
@@ -445,6 +434,23 @@ double GroovinatorAudioProcessor::getSoundTouchInputOutputRatio()
     return _soundTouch.getInputOutputRatio();
 }
 
+
+// Setters
+void GroovinatorAudioProcessor::setTestSliderValue(float v)
+{
+    //_freq = v;
+    //_soundTouch.setPitchSemiTones(v);
+    
+    //_soundTouch.setRate(v);
+    
+    _soundTouchTempo = v;
+    //_soundTouch.setTempo(v);
+}
+
+void GroovinatorAudioProcessor::setOriginalNumSteps(float v)
+{
+    _rhythmHandler.setOriginalNumSteps((int) v);
+}
 
 // Utility methods
 
