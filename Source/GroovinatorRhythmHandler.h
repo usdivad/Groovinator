@@ -26,6 +26,8 @@ public:
     int getTargetNumSteps();
     std::vector<int> getOriginalRhythm();
     std::vector<int> getTargetRhythm();
+    std::string getOriginalRhythmStr();
+    std::string getTargetRhythmStr();
     
     // Setters
     void setOriginalNumSteps(int v);

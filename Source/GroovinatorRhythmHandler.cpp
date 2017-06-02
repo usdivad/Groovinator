@@ -51,18 +51,30 @@ std::vector<int> GroovinatorRhythmHandler::getTargetRhythm()
     return _targetRhythm;
 }
 
+std::string GroovinatorRhythmHandler::getOriginalRhythmStr()
+{
+    return GroovinatorRhythmHandler::rhythmToString(_originalRhythm);
+}
+
+std::string GroovinatorRhythmHandler::getTargetRhythmStr()
+{
+    return GroovinatorRhythmHandler::rhythmToString(_targetRhythm);
+}
+
 // Setters
 void GroovinatorRhythmHandler::setOriginalNumSteps(int v)
 {
     _originalNumSteps = v;
     
     // TODO: Generate Euclidean rhythm using old _originalRhythm's numPulses, and set _originalRhythm
+    _originalRhythm = GroovinatorRhythmHandler::generateEuclideanRhythm(3, v);
 }
 void GroovinatorRhythmHandler::setTargetNumSteps(int v)
 {
     _targetNumSteps = v;
     
     // TODO: Generate Euclidean rhythm using old _targetRhythm's numPulses, and set _targetRhythm
+    _targetRhythm = GroovinatorRhythmHandler::generateEuclideanRhythm(3, v);
 }
 
 void GroovinatorRhythmHandler::setOriginalRhythm(std::vector<int> r)

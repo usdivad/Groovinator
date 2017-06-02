@@ -35,8 +35,15 @@ void GroovinatorUIStepButton::paintButton(Graphics& g, bool isMouseOverButton, b
 
 GroovinatorUIRhythmComponent::GroovinatorUIRhythmComponent(RhythmComponentType rhythmType, GroovinatorRhythmHandler& rhythmHandler) : Component(), _rhythmType(rhythmType), _rhythmHandler(rhythmHandler)
 {
-    
+    setRhythmHandler(rhythmHandler);
 }
+
+void GroovinatorUIRhythmComponent::setRhythmHandler(GroovinatorRhythmHandler& rhythmHandler)
+{
+    _rhythmHandler = rhythmHandler;
+    printf("rhythm handler has been reset: %s\n", GroovinatorRhythmHandler::rhythmToString(rhythmHandler.getOriginalRhythm()).c_str());
+}
+
 
 void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
 {
@@ -52,6 +59,9 @@ void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
     }
     
     int numSteps = rhythm.size();
+    std::string rhythmStr = GroovinatorRhythmHandler::rhythmToString(rhythm);
+    
+    printf("rhythm=%s, numSteps=%d, stepButtonsSize=%d\n", rhythmStr.c_str(), numSteps, _stepButtons.size());
     
     // Recreate all the buttons if necessary
     if (numSteps != _stepButtons.size())
@@ -67,11 +77,13 @@ void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
             GroovinatorUIStepButton* stepButton = new GroovinatorUIStepButton(buttonName);
             addAndMakeVisible(stepButton);
             _stepButtons.add(stepButton);
+            
+            printf("created %s\n", buttonName.toRawUTF8());
         }
     }
     
     // Actually draw stuff
-    g.fillAll(Colours::white);
+    g.fillAll(Colours::darkslategrey);
     
     Rectangle<int> bounds = getBounds();
     double stepButtonWidth = bounds.getWidth() / (double) numSteps;

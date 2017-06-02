@@ -40,8 +40,10 @@ public:
     
     GroovinatorUIRhythmComponent(RhythmComponentType rhythmType, GroovinatorRhythmHandler& rhythmHandler);
     void paint(Graphics& g) override;
+    
+    void setRhythmHandler(GroovinatorRhythmHandler& rhythmHandler);
 private:
-    GroovinatorRhythmHandler _rhythmHandler;
+    GroovinatorRhythmHandler& _rhythmHandler;
     RhythmComponentType _rhythmType;
     OwnedArray<GroovinatorUIStepButton> _stepButtons;
 };
