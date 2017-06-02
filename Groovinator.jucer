@@ -26,6 +26,10 @@
       <FILE id="t429z2" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
     <GROUP id="{DD1FBF3A-ED92-72D1-3019-1D6FE19CA1D1}" name="Library">
+      <GROUP id="{EBA0877D-1228-C421-01CA-854FA2717CF0}" name="BjorklundsAlgorithm">
+        <FILE id="sw2jMd" name="bjorklund.cpp" compile="1" resource="0" file="Library/BjorklundsAlgorithm/bjorklund.cpp"/>
+        <FILE id="KiNo95" name="bjorklund.h" compile="0" resource="0" file="Library/BjorklundsAlgorithm/bjorklund.h"/>
+      </GROUP>
       <GROUP id="{7B5A0C96-A3CF-D441-4BD8-3184635F0D03}" name="SoundTouch">
         <FILE id="XGb7uI" name="AAFilter.cpp" compile="1" resource="0" file="Library/SoundTouch/AAFilter.cpp"/>
         <FILE id="JzJ4N3" name="AAFilter.h" compile="0" resource="0" file="Library/SoundTouch/AAFilter.h"/>

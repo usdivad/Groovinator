@@ -129,12 +129,12 @@ void GroovinatorAudioProcessorEditor::sliderValueChanged(Slider* slider)
     }
     else if (slider == &_originalNumStepsSlider)
     {
-        processor.setOriginalNumSteps(v);
+        processor.getRhythmHandler().setOriginalNumSteps((int) v);
         printf("original num steps slider changed\n");
     }
     else if (slider == &_targetNumStepsSlider)
     {
-        processor.setOriginalNumSteps(v);
+        processor.getRhythmHandler().setTargetNumSteps((int) v);
         printf("target num steps slider changed\n");
     }
 }
@@ -169,7 +169,11 @@ void GroovinatorAudioProcessorEditor::timerCallback()
     
     // Set debug label text
     String debugLabelText;
+    GroovinatorRhythmHandler rhythmHandler = processor.getRhythmHandler();
+    
     debugLabelText  << "/* "
+    
+                    // Audio
                     << "sampsPerMeasure=" << String(processor.calculateNumSamplesPerMeasure())
                     //<< ", pulses per measure: " << String(processor.calculateNumPulsesPerMeasure())
                     << ", posSamps=" << String(processor.calculatePlayHeadRelativePositionInSamples())
@@ -180,6 +184,11 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                     << "\n"
                     << ", measureNum=" << String(processor.getMeasuresElapsed())
                     << ", ioRatio=" << String(processor.getSoundTouchInputOutputRatio(), 2)
+    
+                    // Rhythm
+                    << ", origRhythm=" << String(GroovinatorRhythmHandler::rhythmToString(GroovinatorRhythmHandler::generateEuclideanRhythm(3, rhythmHandler.getOriginalNumSteps())))
+                    << ", trgtRhythm=" << String(GroovinatorRhythmHandler::rhythmToString(GroovinatorRhythmHandler::generateEuclideanRhythm(3, rhythmHandler.getTargetNumSteps())))
+    
                     << " */";
     _debugLabel.setText(debugLabelText, sendNotification);
 }

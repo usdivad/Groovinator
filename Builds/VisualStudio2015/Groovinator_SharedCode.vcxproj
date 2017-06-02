@@ -141,6 +141,7 @@
     <ClCompile Include="..\..\Source\GroovinatorRhythmHandler.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PluginEditor.cpp"/>
+    <ClCompile Include="..\..\Library\BjorklundsAlgorithm\bjorklund.cpp"/>
     <ClCompile Include="..\..\Library\SoundTouch\AAFilter.cpp"/>
     <ClCompile Include="..\..\Library\SoundTouch\BPMDetect.cpp"/>
     <ClCompile Include="..\..\Library\SoundTouch\cpu_detect_x86.cpp"/>

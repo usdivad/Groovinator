@@ -28,6 +28,10 @@ public:
     // Setters
     void setOriginalNumSteps(int v);
     void setTargetNumSteps(int v);
+    
+    // Static methods
+    static std::vector<int> generateEuclideanRhythm(int numPulses, int numSteps);
+    static std::string rhythmToString(std::vector<int> rhythm);
 
 private:
     int _originalNumSteps;

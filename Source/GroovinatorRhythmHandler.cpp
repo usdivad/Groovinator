@@ -6,6 +6,10 @@
 //
 //
 
+#include <sstream>
+
+#include "bjorklund.h"
+
 #include "GroovinatorRhythmHandler.h"
 
 GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalNumSteps(8), _originalPulseIndices(), _targetNumSteps(8), _targetPulseIndices()
@@ -46,3 +50,29 @@ void GroovinatorRhythmHandler::setTargetNumSteps(int v)
 {
     _targetNumSteps = v;
 }
+
+// Methods
+std::vector<int> GroovinatorRhythmHandler::generateEuclideanRhythm(int numPulses, int numSteps)
+{
+    std::vector<int> rhythm;
+    std::string rhythmStr = BjorklundsAlgorithm::bjorklund(numPulses, numSteps);
+    for (size_t i=0; i<rhythmStr.size(); i++)
+    {
+        if (rhythmStr[i] == '0')
+            rhythm.push_back(0);
+        else
+            rhythm.push_back(1);
+    }
+    return rhythm;
+}
+
+std::string GroovinatorRhythmHandler::rhythmToString(std::vector<int> rhythm)
+{
+    std::stringstream ss;
+    for (size_t i=0; i<rhythm.size(); i++)
+    {
+        ss << rhythm[i];
+    }
+    return ss.str();
+}
+

@@ -68,10 +68,10 @@ public:
     double getSoundTouchTempo();
     int getMeasuresElapsed();
     double getSoundTouchInputOutputRatio();
+    GroovinatorRhythmHandler& getRhythmHandler();
     
     // ... and custom setters
     void setTestSliderValue(float v);
-    void setOriginalNumSteps(float v);
     
     // Utility methods
     int calculateNumSamplesPerMeasure();

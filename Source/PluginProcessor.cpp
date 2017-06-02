@@ -434,6 +434,11 @@ double GroovinatorAudioProcessor::getSoundTouchInputOutputRatio()
     return _soundTouch.getInputOutputRatio();
 }
 
+GroovinatorRhythmHandler& GroovinatorAudioProcessor::getRhythmHandler()
+{
+    return _rhythmHandler;
+}
+
 
 // Setters
 void GroovinatorAudioProcessor::setTestSliderValue(float v)
@@ -445,11 +450,6 @@ void GroovinatorAudioProcessor::setTestSliderValue(float v)
     
     _soundTouchTempo = v;
     //_soundTouch.setTempo(v);
-}
-
-void GroovinatorAudioProcessor::setOriginalNumSteps(float v)
-{
-    _rhythmHandler.setOriginalNumSteps((int) v);
 }
 
 // Utility methods

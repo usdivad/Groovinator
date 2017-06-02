@@ -22,6 +22,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{7EE990
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{FCA2F010-C9B1-CAFA-DB8E-0318F81D7C26}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BjorklundsAlgorithm", "BjorklundsAlgorithm", "{D5D86D43-8DC6-14D3-79D6-F94ACF50A856}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\Library\BjorklundsAlgorithm\bjorklund.cpp = ..\..\Library\BjorklundsAlgorithm\bjorklund.cpp
+		..\..\Library\BjorklundsAlgorithm\bjorklund.h = ..\..\Library\BjorklundsAlgorithm\bjorklund.h
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SoundTouch", "SoundTouch", "{55384A27-4434-3079-5DFE-D05A9E584BEA}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\Library\SoundTouch\AAFilter.cpp = ..\..\Library\SoundTouch\AAFilter.cpp
@@ -1839,6 +1845,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7EE99019-34FC-0E3C-B519-17E9E3819ED2} = {45D20A03-D35A-609A-B316-D0682E38A0C3}
+		{D5D86D43-8DC6-14D3-79D6-F94ACF50A856} = {FCA2F010-C9B1-CAFA-DB8E-0318F81D7C26}
 		{55384A27-4434-3079-5DFE-D05A9E584BEA} = {FCA2F010-C9B1-CAFA-DB8E-0318F81D7C26}
 		{FCA2F010-C9B1-CAFA-DB8E-0318F81D7C26} = {45D20A03-D35A-609A-B316-D0682E38A0C3}
 		{EBF046F5-7CA3-37D3-9D14-C9A7C0217454} = {7D98269F-FE96-6BA2-6982-95A094257474}
