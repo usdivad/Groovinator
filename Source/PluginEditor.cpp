@@ -93,14 +93,14 @@ void GroovinatorAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    _testSlider.setBounds(30, 80, 50, (getHeight()/2));
+    _testSlider.setBounds(0, 80, 30, (getHeight()/2));
     _playHeadInfoLabel.setBounds(0, 40, getWidth(), 20);
     _debugLabel.setBounds(0, getHeight()-60, getWidth(), 60);
     
     
     // Rhythm components
-    double originalRhythmY = 60;
-    double targetRhythmY = originalRhythmY + 120;
+    double originalRhythmY = 80;
+    double targetRhythmY = originalRhythmY + 100;
     
     double numStepsX = getWidth()-80;
     
