@@ -49,7 +49,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _originalNumStepsSlider.setRange(1, 99, 1);
     _originalNumStepsSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 30, 20);
     _originalNumStepsSlider.setIncDecButtonsMode(Slider::incDecButtonsDraggable_AutoDirection);
-    _originalNumStepsSlider.setValue(0);
+    _originalNumStepsSlider.setValue(8);
     _originalNumStepsSlider.addListener(this);
     _originalNumStepsLabel.setText("# steps", dontSendNotification);
     
@@ -57,7 +57,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _targetNumStepsSlider.setRange(1, 99, 1);
     _targetNumStepsSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 30, 20);
     _targetNumStepsSlider.setIncDecButtonsMode(Slider::incDecButtonsDraggable_AutoDirection);
-    _targetNumStepsSlider.setValue(0);
+    _targetNumStepsSlider.setValue(8);
     _targetNumStepsSlider.addListener(this);
     _targetNumStepsLabel.setText("# steps", dontSendNotification);
     
