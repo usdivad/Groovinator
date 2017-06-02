@@ -23,9 +23,12 @@ public:
     
     // Getters
     int getOriginalNumSteps();
+    int getTargetNumSteps();
     
     // Setters
     void setOriginalNumSteps(int v);
+    void setTargetNumSteps(int v);
+
 private:
     int _originalNumSteps;
     std::vector<int> _originalPulseIndices;

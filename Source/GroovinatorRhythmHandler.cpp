@@ -32,9 +32,17 @@ int GroovinatorRhythmHandler::getOriginalNumSteps()
 {
     return _originalNumSteps;
 }
+int GroovinatorRhythmHandler::getTargetNumSteps()
+{
+    return _targetNumSteps;
+}
 
 // Setters
 void GroovinatorRhythmHandler::setOriginalNumSteps(int v)
 {
     _originalNumSteps = v;
+}
+void GroovinatorRhythmHandler::setTargetNumSteps(int v)
+{
+    _targetNumSteps = v;
 }

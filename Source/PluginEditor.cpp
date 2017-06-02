@@ -46,17 +46,29 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     
     // Num steps
     _originalNumStepsSlider.setSliderStyle(Slider::IncDecButtons);
-    _originalNumStepsSlider.setRange(1, 104, 1);
+    _originalNumStepsSlider.setRange(1, 99, 1);
     _originalNumStepsSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 30, 20);
-    _originalNumStepsSlider.setPopupDisplayEnabled(true, this);
+    _originalNumStepsSlider.setIncDecButtonsMode(Slider::incDecButtonsDraggable_AutoDirection);
     _originalNumStepsSlider.setValue(0);
     _originalNumStepsSlider.addListener(this);
+    _originalNumStepsLabel.setText("# steps", dontSendNotification);
+    
+    _targetNumStepsSlider.setSliderStyle(Slider::IncDecButtons);
+    _targetNumStepsSlider.setRange(1, 99, 1);
+    _targetNumStepsSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 30, 20);
+    _targetNumStepsSlider.setIncDecButtonsMode(Slider::incDecButtonsDraggable_AutoDirection);
+    _targetNumStepsSlider.setValue(0);
+    _targetNumStepsSlider.addListener(this);
+    _targetNumStepsLabel.setText("# steps", dontSendNotification);
     
     // Add components to editor
     addAndMakeVisible(&_testSlider);
     addAndMakeVisible(&_playHeadInfoLabel);
     addAndMakeVisible(&_debugLabel);
     addAndMakeVisible(&_originalNumStepsSlider);
+    addAndMakeVisible(&_originalNumStepsLabel);
+    addAndMakeVisible(&_targetNumStepsSlider);
+    addAndMakeVisible(&_targetNumStepsLabel);
 
     // Start timer
     startTimer(50);
@@ -84,7 +96,26 @@ void GroovinatorAudioProcessorEditor::resized()
     _testSlider.setBounds(30, 80, 50, (getHeight()/2));
     _playHeadInfoLabel.setBounds(0, 40, getWidth(), 20);
     _debugLabel.setBounds(0, getHeight()-60, getWidth(), 60);
-    _originalNumStepsSlider.setBounds(getWidth()-60, 80, 50, 50);
+    
+    
+    // Rhythm components
+    double originalRhythmY = 60;
+    double targetRhythmY = originalRhythmY + 120;
+    
+    double numStepsX = getWidth()-80;
+    
+    double numStepsLabelYOffset = 0;
+    double numStepsLabelWidth = 60;
+    double numStepsLabelHeight = 20;
+    
+    double numStepsSliderYOffset = 20;
+    double numStepsSliderWidth = 60;
+    double numStepsSliderHeight = 50;
+    
+    _originalNumStepsLabel.setBounds(numStepsX, originalRhythmY + numStepsLabelYOffset, numStepsLabelWidth, numStepsLabelHeight);
+    _originalNumStepsSlider.setBounds(numStepsX, originalRhythmY + numStepsSliderYOffset, numStepsSliderWidth, numStepsSliderHeight);
+    _targetNumStepsLabel.setBounds(numStepsX, targetRhythmY + numStepsLabelYOffset, numStepsLabelWidth, numStepsLabelHeight);
+    _targetNumStepsSlider.setBounds(numStepsX, targetRhythmY + numStepsSliderYOffset, numStepsSliderWidth, numStepsSliderHeight);
 }
 
 //
@@ -94,12 +125,17 @@ void GroovinatorAudioProcessorEditor::sliderValueChanged(Slider* slider)
     if (slider == &_testSlider)
     {
         processor.setTestSliderValue(v);
-        printf("test slider changed");
+        printf("test slider changed\n");
     }
     else if (slider == &_originalNumStepsSlider)
     {
         processor.setOriginalNumSteps(v);
-        printf("origina num steps slider changed");
+        printf("original num steps slider changed\n");
+    }
+    else if (slider == &_targetNumStepsSlider)
+    {
+        processor.setOriginalNumSteps(v);
+        printf("target num steps slider changed\n");
     }
 }
 
