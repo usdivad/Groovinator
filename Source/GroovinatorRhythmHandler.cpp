@@ -12,12 +12,12 @@
 
 #include "GroovinatorRhythmHandler.h"
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalNumSteps(8), _originalRhythm(), _targetNumSteps(8), _targetRhythm()
+GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalNumSteps(8), _originalRhythm(8, 0), _targetNumSteps(8), _targetRhythm(8, 0)
 {
     
 }
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalNumSteps(_originalNumSteps), _originalRhythm(), _targetNumSteps(targetNumSteps), _targetRhythm()
+GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalNumSteps(_originalNumSteps), _originalRhythm(originalNumSteps, 0), _targetNumSteps(targetNumSteps), _targetRhythm(targetNumSteps, 0)
 {
 }
 
@@ -65,16 +65,18 @@ std::string GroovinatorRhythmHandler::getTargetRhythmStr()
 void GroovinatorRhythmHandler::setOriginalNumSteps(int v)
 {
     _originalNumSteps = v;
+    _originalRhythm.resize(v);
     
     // TODO: Generate Euclidean rhythm using old _originalRhythm's numPulses, and set _originalRhythm
-    _originalRhythm = GroovinatorRhythmHandler::generateEuclideanRhythm(3, v);
+    //_originalRhythm = GroovinatorRhythmHandler::generateEuclideanRhythm(3, v);
 }
 void GroovinatorRhythmHandler::setTargetNumSteps(int v)
 {
     _targetNumSteps = v;
-    
+    _targetRhythm.resize(v);
+
     // TODO: Generate Euclidean rhythm using old _targetRhythm's numPulses, and set _targetRhythm
-    _targetRhythm = GroovinatorRhythmHandler::generateEuclideanRhythm(3, v);
+    //_targetRhythm = GroovinatorRhythmHandler::generateEuclideanRhythm(3, v);
 }
 
 void GroovinatorRhythmHandler::setOriginalRhythm(std::vector<int> r)
