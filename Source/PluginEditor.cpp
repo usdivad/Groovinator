@@ -158,16 +158,20 @@ void GroovinatorAudioProcessorEditor::sliderValueChanged(Slider* slider)
     {
         GroovinatorRhythmHandler& rhythmHandler = processor.getRhythmHandler();
         rhythmHandler.setOriginalNumSteps((int) v);
-        printf("%s\n", rhythmHandler.getOriginalRhythmStr().c_str());
         _originalRhythmBgRect.setRhythmHandler(rhythmHandler);
+        _originalRhythmBgRect.repaint();
+        
+        printf("%s\n", rhythmHandler.getOriginalRhythmStr().c_str());
         printf("original num steps slider changed\n");
     }
     else if (slider == &_targetNumStepsSlider)
     {
         GroovinatorRhythmHandler& rhythmHandler = processor.getRhythmHandler();
         rhythmHandler.setTargetNumSteps((int) v);
-        printf("%s\n", rhythmHandler.getTargetRhythmStr().c_str());
         _targetRhythmBgRect.setRhythmHandler(rhythmHandler);
+        _targetRhythmBgRect.repaint();
+        
+        printf("%s\n", rhythmHandler.getTargetRhythmStr().c_str());
         printf("target num steps slider changed\n");
     }
 }
