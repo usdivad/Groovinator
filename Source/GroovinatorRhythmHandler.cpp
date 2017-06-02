@@ -12,16 +12,16 @@
 
 #include "GroovinatorRhythmHandler.h"
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalNumSteps(8), _originalPulseIndices(), _targetNumSteps(8), _targetPulseIndices()
+GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalNumSteps(8), _originalRhythm(), _targetNumSteps(8), _targetRhythm()
 {
     
 }
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalNumSteps(_originalNumSteps), _originalPulseIndices(), _targetNumSteps(targetNumSteps), _targetPulseIndices()
+GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalNumSteps(_originalNumSteps), _originalRhythm(), _targetNumSteps(targetNumSteps), _targetRhythm()
 {
 }
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, std::vector<int> originalPulseIndices, int targetNumSteps, std::vector<int> targetPulseIndices) : _originalNumSteps(originalNumSteps), _originalPulseIndices(originalPulseIndices), _targetNumSteps(targetNumSteps), _targetPulseIndices(targetPulseIndices)
+GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, std::vector<int> originalRhythm, int targetNumSteps, std::vector<int> targetRhythm) : _originalNumSteps(originalNumSteps), _originalRhythm(originalRhythm), _targetNumSteps(targetNumSteps), _targetRhythm(targetRhythm)
 {
     
 }
@@ -41,14 +41,40 @@ int GroovinatorRhythmHandler::getTargetNumSteps()
     return _targetNumSteps;
 }
 
+std::vector<int> GroovinatorRhythmHandler::getOriginalRhythm()
+{
+    return _originalRhythm;
+}
+
+std::vector<int> GroovinatorRhythmHandler::getTargetRhythm()
+{
+    return _targetRhythm;
+}
+
 // Setters
 void GroovinatorRhythmHandler::setOriginalNumSteps(int v)
 {
     _originalNumSteps = v;
+    
+    // TODO: Generate Euclidean rhythm using old _originalRhythm's numPulses, and set _originalRhythm
 }
 void GroovinatorRhythmHandler::setTargetNumSteps(int v)
 {
     _targetNumSteps = v;
+    
+    // TODO: Generate Euclidean rhythm using old _targetRhythm's numPulses, and set _targetRhythm
+}
+
+void GroovinatorRhythmHandler::setOriginalRhythm(std::vector<int> r)
+{
+    _originalRhythm = r;
+    _originalNumSteps = r.size();
+}
+
+void GroovinatorRhythmHandler::setTargetRhythm(std::vector<int> r)
+{
+    _targetRhythm = r;
+    _targetNumSteps = r.size();
 }
 
 // Methods

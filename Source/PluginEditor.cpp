@@ -14,7 +14,10 @@
 
 //==============================================================================
 GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+:   AudioProcessorEditor (&p),
+    processor (p),
+    _originalRhythmBgRect(GroovinatorUIRhythmComponent::kOriginalRhythm, processor.getRhythmHandler()),
+    _targetRhythmBgRect(GroovinatorUIRhythmComponent::kTargetRhythm, processor.getRhythmHandler())
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -72,6 +75,8 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     addAndMakeVisible(&_originalNumStepsLabel);
     addAndMakeVisible(&_targetNumStepsSlider);
     addAndMakeVisible(&_targetNumStepsLabel);
+    addAndMakeVisible(&_originalRhythmBgRect);
+    addAndMakeVisible(&_targetRhythmBgRect);
 
     // Start timer
     startTimer(50);
@@ -95,9 +100,9 @@ void GroovinatorAudioProcessorEditor::paint (Graphics& g)
     g.drawFittedText ("G R O O V I N A T O R", 0, 0, getWidth(), 30, Justification::centred, 1);
     
     // Rhythm boxes
-    g.setColour(Colours::darkslategrey);
-    g.fillRect(_originalRhythmBgRect);
-    g.fillRect(_targetRhythmBgRect);
+    //g.setColour(Colours::darkslategrey);
+    //g.fillRect(_originalRhythmBgRect);
+    //g.fillRect(_targetRhythmBgRect);
 }
 
 void GroovinatorAudioProcessorEditor::resized()

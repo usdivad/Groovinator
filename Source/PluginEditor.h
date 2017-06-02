@@ -11,8 +11,9 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "PluginProcessor.h"
 
+#include "PluginProcessor.h"
+#include "GroovinatorUIRhythmComponent.h"
 
 //==============================================================================
 /**
@@ -43,20 +44,12 @@ private:
     Slider _testSlider;
     Label _playHeadInfoLabel;
     Label _debugLabel;
-    Rectangle<int> _originalRhythmBgRect;
-    Rectangle<int> _targetRhythmBgRect;
+    GroovinatorUIRhythmComponent _originalRhythmBgRect;
+    GroovinatorUIRhythmComponent _targetRhythmBgRect;
     Label _originalNumStepsLabel;
     Slider _originalNumStepsSlider;
     Label _targetNumStepsLabel;
     Slider _targetNumStepsSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessorEditor)
-};
-
-//==============================================================================
-/**
- */
-class GroovinatorStepButton : public Button
-{
-    
 };

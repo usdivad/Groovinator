@@ -17,6 +17,10 @@
             file="Source/GroovinatorRhythmHandler.cpp"/>
       <FILE id="hSDG7Y" name="GroovinatorRhythmHandler.h" compile="0" resource="0"
             file="Source/GroovinatorRhythmHandler.h"/>
+      <FILE id="YX1PA3" name="GroovinatorUIRhythmComponent.cpp" compile="1"
+            resource="0" file="Source/GroovinatorUIRhythmComponent.cpp"/>
+      <FILE id="psxtM4" name="GroovinatorUIRhythmComponent.h" compile="0"
+            resource="0" file="Source/GroovinatorUIRhythmComponent.h"/>
       <FILE id="faq17B" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="TQLTPK" name="PluginProcessor.h" compile="0" resource="0"

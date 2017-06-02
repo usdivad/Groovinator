@@ -17,17 +17,21 @@ class GroovinatorRhythmHandler
 public:
     GroovinatorRhythmHandler();
     GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps);
-    GroovinatorRhythmHandler(int originalNumSteps, std::vector<int> originalPulseIndices,
-                             int targetNumSteps, std::vector<int> targetPulseIndices);
+    GroovinatorRhythmHandler(int originalNumSteps, std::vector<int> originalRhythm,
+                             int targetNumSteps, std::vector<int> targetRhythm);
     ~GroovinatorRhythmHandler();
     
     // Getters
     int getOriginalNumSteps();
     int getTargetNumSteps();
+    std::vector<int> getOriginalRhythm();
+    std::vector<int> getTargetRhythm();
     
     // Setters
     void setOriginalNumSteps(int v);
     void setTargetNumSteps(int v);
+    void setOriginalRhythm(std::vector<int> r);
+    void setTargetRhythm(std::vector<int> r);
     
     // Static methods
     static std::vector<int> generateEuclideanRhythm(int numPulses, int numSteps);
@@ -35,9 +39,9 @@ public:
 
 private:
     int _originalNumSteps;
-    std::vector<int> _originalPulseIndices;
+    std::vector<int> _originalRhythm;
     int _targetNumSteps;
-    std::vector<int> _targetPulseIndices;
+    std::vector<int> _targetRhythm;
 };
 
 #endif /* GroovinatorRhythmHandler_h */

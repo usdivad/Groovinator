@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\GroovinatorRhythmHandler.cpp"/>
+    <ClCompile Include="..\..\Source\GroovinatorUIRhythmComponent.cpp"/>
     <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
     <ClCompile Include="..\..\Source\PluginEditor.cpp"/>
     <ClCompile Include="..\..\Library\BjorklundsAlgorithm\bjorklund.cpp"/>
