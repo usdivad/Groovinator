@@ -47,8 +47,12 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     //==============================================================================
     //Rhythm
     
+    // Labels
+    _originalRhythmLabel.setText("Original rhythm", dontSendNotification);
+    _targetRhythmLabel.setText("Target rhythm", dontSendNotification);
+    
     // Rectangles
-    //_originalRhythmBgRect
+    // _originalRhythmBgRect and _targetRhythmBgRect; they're now handled inside GroovinatorUIRhythmComponent
     
     // Num steps
     _originalNumStepsSlider.setSliderStyle(Slider::IncDecButtons);
@@ -70,14 +74,16 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     // Add components to editor
     //addAndMakeVisible(&_testSlider);
     addAndMakeVisible(&_playHeadInfoLabel);
-    addAndMakeVisible(&_debugLabel);
+    //addAndMakeVisible(&_debugLabel);
+    addAndMakeVisible(&_originalRhythmLabel);
+    addAndMakeVisible(&_targetRhythmLabel);
+    addAndMakeVisible(&_originalRhythmBgRect);
+    addAndMakeVisible(&_targetRhythmBgRect);
     addAndMakeVisible(&_originalNumStepsSlider);
     addAndMakeVisible(&_originalNumStepsLabel);
     addAndMakeVisible(&_targetNumStepsSlider);
     addAndMakeVisible(&_targetNumStepsLabel);
-    addAndMakeVisible(&_originalRhythmBgRect);
-    addAndMakeVisible(&_targetRhythmBgRect);
-
+    
     // Start timer
     startTimer(50);
 }
@@ -118,14 +124,19 @@ void GroovinatorAudioProcessorEditor::resized()
     // Component positions will generally go in the format:
     // .setBounds(<componentName>X, <original/target>RhythmY + <componentName>YOffset, <componentName>Width, <componentName>Height)
     
+    // Labels
+    double rhythmLabelX = 20;
+    double rhythmLabelYOffset = 0;
+    double rhythmLabelWidth = 200;
+    double rhythmLabelHeight = 20;
+    
+    // Rectangles
     double rhythmBgRectX = 20;
-    double rhythmBgRectYOffset = 0;
+    double rhythmBgRectYOffset = rhythmLabelYOffset + rhythmLabelHeight + 5;
     double rhythmBgRectWidth = (getWidth() - (2*rhythmBgRectX)) * 0.8;
     double rhythmBgRectHeight = 99;
     
-    double originalRhythmY = 99;
-    double targetRhythmY = originalRhythmY + rhythmBgRectHeight + 33;
-    
+    // Num steps labels and sliders
     double numStepsWidth = 60;
     double numStepsX = getWidth() - rhythmBgRectX - numStepsWidth; // rhythmBgRectX + rhythmBgRectWidth + 10;
     
@@ -136,6 +147,13 @@ void GroovinatorAudioProcessorEditor::resized()
     double numStepsSliderYOffset = 20;
     double numStepsSliderWidth = numStepsWidth;
     double numStepsSliderHeight = 50;
+    
+    // Overall rhythm position
+    double originalRhythmY = 99;
+    double targetRhythmY = originalRhythmY + + rhythmLabelHeight + rhythmBgRectHeight + 33;
+    
+    _originalRhythmLabel.setBounds(rhythmLabelX, originalRhythmY + rhythmLabelYOffset, rhythmLabelWidth, rhythmLabelHeight);
+    _targetRhythmLabel.setBounds(rhythmLabelX, targetRhythmY + rhythmLabelYOffset, rhythmLabelWidth, rhythmLabelHeight);
     
     _originalRhythmBgRect.setBounds(rhythmBgRectX, originalRhythmY + rhythmBgRectYOffset, rhythmBgRectWidth, rhythmBgRectHeight);
     _targetRhythmBgRect.setBounds(rhythmBgRectX, targetRhythmY + rhythmBgRectYOffset, rhythmBgRectWidth, rhythmBgRectHeight);

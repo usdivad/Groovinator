@@ -50,6 +50,8 @@ private:
     Slider _originalNumStepsSlider;
     Label _targetNumStepsLabel;
     Slider _targetNumStepsSlider;
+    Label _originalRhythmLabel;
+    Label _targetRhythmLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessorEditor)
 };
