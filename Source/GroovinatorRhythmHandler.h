@@ -43,8 +43,13 @@ public:
     void toggleOriginalRhythmStepAt(int i);
     void toggleTargetRhythmStepAt(int i);
     
-    // Static methods
-    static RhythmSequence generateEuclideanRhythm(int numPulses, int numSteps);
+    // Fibonacci stretch methods (static)
+    static RhythmSequence generateEuclideanRhythm(int numPulses, int numSteps); // Corresponds to bjorklund.bjorklund() in the Python implementation
+    static std::vector<int> calculatePulseLengths(RhythmSequence rhythm);
+    static std::vector<double> calculatePulseRatios(RhythmSequence originalRhythm, RhythmSequence targetRhythm);
+    static std::vector<double> calculateStepStretchRatios(RhythmSequence originalRhythm, RhythmSequence targetRhythm);
+    
+    // Other static methods
     static std::string rhythmToString(RhythmSequence rhythm);
     static int proportionToStepIndex(double proportion, int numSteps);
 

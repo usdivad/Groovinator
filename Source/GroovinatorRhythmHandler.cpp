@@ -116,7 +116,7 @@ void GroovinatorRhythmHandler::toggleTargetRhythmStepAt(int i)
     _targetRhythm[i] = _targetRhythm[i] == 1 ? 0 : 1;
 }
 
-// Static methods
+// Fibonacci stretch methods (static)
 GroovinatorRhythmHandler::RhythmSequence GroovinatorRhythmHandler::generateEuclideanRhythm(int numPulses, int numSteps)
 {
     RhythmSequence rhythm;
@@ -131,6 +131,37 @@ GroovinatorRhythmHandler::RhythmSequence GroovinatorRhythmHandler::generateEucli
     return rhythm;
 }
 
+std::vector<int> GroovinatorRhythmHandler::calculatePulseLengths(GroovinatorRhythmHandler::RhythmSequence rhythm)
+{
+    std::vector<int> pulseIndices;
+    for (size_t i=0; i<rhythm.size(); i++)
+    {
+        if (rhythm[i] > 0)
+            pulseIndices.push_back((int) i);
+    }
+    pulseIndices.push_back(rhythm.size());
+    
+    std::vector<int> pulseLengths;
+    for (size_t i=0; i<pulseIndices.size()-1; i++)
+    {
+        pulseLengths.push_back(pulseIndices[i+1] - pulseIndices[i]);
+    }
+    
+    return pulseLengths;
+}
+
+std::vector<double> GroovinatorRhythmHandler::calculatePulseRatios(GroovinatorRhythmHandler::RhythmSequence originalRhythm, GroovinatorRhythmHandler::RhythmSequence targetRhythm)
+{
+    
+}
+
+std::vector<double> GroovinatorRhythmHandler::calculateStepStretchRatios(GroovinatorRhythmHandler::RhythmSequence originalRhythm, GroovinatorRhythmHandler::RhythmSequence targetRhythm)
+{
+    
+}
+
+
+// Other static methods
 std::string GroovinatorRhythmHandler::rhythmToString(RhythmSequence rhythm)
 {
     std::stringstream ss;
