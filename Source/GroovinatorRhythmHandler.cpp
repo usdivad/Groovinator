@@ -14,11 +14,14 @@
 
 GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalRhythm(8, 0), _targetRhythm(8, 0)
 {
-    //_originalRhythm[0] = 1; // Testing
+    _originalRhythm[0] = 1;
+    _targetRhythm[0] = 1;
 }
 
 GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalRhythm(originalNumSteps, 0), _targetRhythm(targetNumSteps, 0)
 {
+    _originalRhythm[0] = 1;
+    _targetRhythm[0] = 1;
 }
 
 GroovinatorRhythmHandler::GroovinatorRhythmHandler(RhythmSequence originalRhythm, RhythmSequence targetRhythm) : _originalRhythm(originalRhythm), _targetRhythm(targetRhythm)
