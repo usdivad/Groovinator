@@ -12,16 +12,16 @@
 
 #include "GroovinatorRhythmHandler.h"
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalNumSteps(8), _originalRhythm(8, 0), _targetNumSteps(8), _targetRhythm(8, 0)
+GroovinatorRhythmHandler::GroovinatorRhythmHandler() : _originalRhythm(8, 0), _targetRhythm(8, 0)
 {
     //_originalRhythm[0] = 1; // Testing
 }
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalNumSteps(_originalNumSteps), _originalRhythm(originalNumSteps, 0), _targetNumSteps(targetNumSteps), _targetRhythm(targetNumSteps, 0)
+GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps) : _originalRhythm(originalNumSteps, 0), _targetRhythm(targetNumSteps, 0)
 {
 }
 
-GroovinatorRhythmHandler::GroovinatorRhythmHandler(int originalNumSteps, RhythmSequence originalRhythm, int targetNumSteps, RhythmSequence targetRhythm) : _originalNumSteps(originalNumSteps), _originalRhythm(originalRhythm), _targetNumSteps(targetNumSteps), _targetRhythm(targetRhythm)
+GroovinatorRhythmHandler::GroovinatorRhythmHandler(RhythmSequence originalRhythm, RhythmSequence targetRhythm) : _originalRhythm(originalRhythm), _targetRhythm(targetRhythm)
 {
     
 }
@@ -34,11 +34,11 @@ GroovinatorRhythmHandler::~GroovinatorRhythmHandler()
 // Getters
 int GroovinatorRhythmHandler::getOriginalNumSteps()
 {
-    return _originalNumSteps;
+    return _originalRhythm.size();
 }
 int GroovinatorRhythmHandler::getTargetNumSteps()
 {
-    return _targetNumSteps;
+    return _targetRhythm.size();
 }
 
 GroovinatorRhythmHandler::RhythmSequence GroovinatorRhythmHandler::getOriginalRhythm()
@@ -69,7 +69,6 @@ double GroovinatorRhythmHandler::getProportionOfRhythmElapsed()
 // Setters
 void GroovinatorRhythmHandler::setOriginalNumSteps(int v)
 {
-    _originalNumSteps = v;
     _originalRhythm.resize(v);
     
     // TODO: Generate Euclidean rhythm using old _originalRhythm's numPulses, and set _originalRhythm
@@ -77,7 +76,6 @@ void GroovinatorRhythmHandler::setOriginalNumSteps(int v)
 }
 void GroovinatorRhythmHandler::setTargetNumSteps(int v)
 {
-    _targetNumSteps = v;
     _targetRhythm.resize(v);
 
     // TODO: Generate Euclidean rhythm using old _targetRhythm's numPulses, and set _targetRhythm
@@ -87,13 +85,11 @@ void GroovinatorRhythmHandler::setTargetNumSteps(int v)
 void GroovinatorRhythmHandler::setOriginalRhythm(RhythmSequence r)
 {
     _originalRhythm = r;
-    _originalNumSteps = r.size();
 }
 
 void GroovinatorRhythmHandler::setTargetRhythm(RhythmSequence r)
 {
     _targetRhythm = r;
-    _targetNumSteps = r.size();
 }
 
 void GroovinatorRhythmHandler::setProportionOfRhythmElapsed(double v)

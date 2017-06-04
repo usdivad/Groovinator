@@ -19,8 +19,7 @@ public:
     
     GroovinatorRhythmHandler();
     GroovinatorRhythmHandler(int originalNumSteps, int targetNumSteps);
-    GroovinatorRhythmHandler(int originalNumSteps, RhythmSequence originalRhythm,
-                             int targetNumSteps, RhythmSequence targetRhythm);
+    GroovinatorRhythmHandler(RhythmSequence originalRhythm, RhythmSequence targetRhythm);
     ~GroovinatorRhythmHandler();
     
     // Getters
@@ -57,9 +56,7 @@ public:
     static int proportionToStepIndex(double proportion, int numSteps);
 
 private:
-    int _originalNumSteps;
     RhythmSequence _originalRhythm;
-    int _targetNumSteps;
     RhythmSequence _targetRhythm;
     double _proportionOfRhythmElapsed;
 };
