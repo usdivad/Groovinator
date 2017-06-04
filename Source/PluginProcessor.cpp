@@ -154,6 +154,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         return;
     }
     
+    // Update rhythm handler
+    _rhythmHandler.setProportionOfRhythmElapsed(calculateProportionOfMeasureElapsed());
+    
     // Setup SoundTouch
     _soundTouch.setSampleRate(getSampleRate());
     //_soundTouch.setChannels(totalNumInputChannels);
@@ -509,6 +512,11 @@ double GroovinatorAudioProcessor::calculateSecondsPerBeat()
         return 0.0;
 
     return 60.0 / _playHeadInfo.bpm;
+}
+
+double GroovinatorAudioProcessor::calculateProportionOfMeasureElapsed()
+{
+    return calculatePlayHeadRelativePositionInSamples() / (double) calculateNumSamplesPerMeasure();
 }
 
 //void GroovinatorAudioProcessor::updateValuesFromPlayHead()

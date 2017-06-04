@@ -61,6 +61,11 @@ std::string GroovinatorRhythmHandler::getTargetRhythmStr()
     return GroovinatorRhythmHandler::rhythmToString(_targetRhythm);
 }
 
+double GroovinatorRhythmHandler::getProportionOfRhythmElapsed()
+{
+    return _proportionOfRhythmElapsed;
+}
+
 // Setters
 void GroovinatorRhythmHandler::setOriginalNumSteps(int v)
 {
@@ -89,6 +94,11 @@ void GroovinatorRhythmHandler::setTargetRhythm(RhythmSequence r)
 {
     _targetRhythm = r;
     _targetNumSteps = r.size();
+}
+
+void GroovinatorRhythmHandler::setProportionOfRhythmElapsed(double v)
+{
+    _proportionOfRhythmElapsed = v;
 }
 
 // Utility methods
@@ -129,5 +139,10 @@ std::string GroovinatorRhythmHandler::rhythmToString(RhythmSequence rhythm)
         ss << rhythm[i];
     }
     return ss.str();
+}
+
+int GroovinatorRhythmHandler::proportionToStepIndex(double proportion, int numSteps)
+{
+    return (int) (proportion * numSteps);
 }
 

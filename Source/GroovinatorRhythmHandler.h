@@ -30,12 +30,14 @@ public:
     RhythmSequence getTargetRhythm();
     std::string getOriginalRhythmStr();
     std::string getTargetRhythmStr();
+    double getProportionOfRhythmElapsed();
     
     // Setters
     void setOriginalNumSteps(int v);
     void setTargetNumSteps(int v);
     void setOriginalRhythm(RhythmSequence r);
     void setTargetRhythm(RhythmSequence r);
+    void setProportionOfRhythmElapsed(double v);
     
     // Utility methods
     void toggleOriginalRhythmStepAt(int i);
@@ -44,12 +46,14 @@ public:
     // Static methods
     static RhythmSequence generateEuclideanRhythm(int numPulses, int numSteps);
     static std::string rhythmToString(RhythmSequence rhythm);
+    static int proportionToStepIndex(double proportion, int numSteps);
 
 private:
     int _originalNumSteps;
     RhythmSequence _originalRhythm;
     int _targetNumSteps;
     RhythmSequence _targetRhythm;
+    double _proportionOfRhythmElapsed;
 };
 
 #endif /* GroovinatorRhythmHandler_h */

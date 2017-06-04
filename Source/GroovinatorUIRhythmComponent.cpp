@@ -10,13 +10,19 @@
 
 
 //==============================================================================
-GroovinatorUIStepButton::GroovinatorUIStepButton(const String& buttonName) : Button(buttonName)
+GroovinatorUIStepButton::GroovinatorUIStepButton(const String& buttonName, int index, int totalNumSteps, GroovinatorRhythmHandler& rhythmHandler) : Button(buttonName), _index(index), _totalNumSteps(totalNumSteps), _rhythmHandler(rhythmHandler)
 {
     
 }
 
 void GroovinatorUIStepButton::paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDown)
 {
+    if (isPlayHeadAtStep())
+    {
+        g.fillAll(Colours::orangered);
+        return;
+    }
+    
     if (isButtonDown)
     {
         g.fillAll(Colours::orange);
@@ -31,9 +37,16 @@ void GroovinatorUIStepButton::paintButton(Graphics& g, bool isMouseOverButton, b
     }
 }
 
+bool GroovinatorUIStepButton::isPlayHeadAtStep()
+{
+    double playHeadProportion = _rhythmHandler.getProportionOfRhythmElapsed();
+    int playHeadIndex = GroovinatorRhythmHandler::proportionToStepIndex(playHeadProportion, _totalNumSteps);
+    return playHeadIndex == _index;
+}
+
 //==============================================================================
 
-GroovinatorUIRhythmComponent::GroovinatorUIRhythmComponent(RhythmComponentType rhythmType, GroovinatorRhythmHandler& rhythmHandler) : Component(), _rhythmType(rhythmType), _rhythmHandler(rhythmHandler)
+GroovinatorUIRhythmComponent::GroovinatorUIRhythmComponent(RhythmComponentType rhythmType, GroovinatorRhythmHandler& rhythmHandler) : Component(),  _rhythmHandler(rhythmHandler), _rhythmType(rhythmType)
 {
     setRhythmHandler(rhythmHandler);
 }
@@ -75,7 +88,7 @@ void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
     int numSteps = rhythm.size();
     std::string rhythmStr = GroovinatorRhythmHandler::rhythmToString(rhythm);
     
-    printf("rhythm=%s, numSteps=%d, stepButtonsSize=%d\n", rhythmStr.c_str(), numSteps, _stepButtons.size());
+    //printf("rhythm=%s, numSteps=%d, stepButtonsSize=%d\n", rhythmStr.c_str(), numSteps, _stepButtons.size());
     
     // Recreate all the buttons if necessary
     if (numSteps != _stepButtons.size())
@@ -88,7 +101,7 @@ void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
             String rhythmTypeName = _rhythmType == kOriginalRhythm ? "original" : "target";
             buttonName  << rhythmTypeName << "Step" << i;
             
-            GroovinatorUIStepButton* stepButton = new GroovinatorUIStepButton(buttonName);
+            GroovinatorUIStepButton* stepButton = new GroovinatorUIStepButton(buttonName, i, numSteps, _rhythmHandler);
             stepButton->addListener(this);
             
             addAndMakeVisible(stepButton);
@@ -113,7 +126,10 @@ void GroovinatorUIRhythmComponent::paint(juce::Graphics &g)
         //double stepButtonY = getHeight() / 2.0;
         double stepButtonY = 0.0;
         double stepButtonHeight = rhythm[i] == 1 ? stepButtonPulseHeight : stepButtonStepHeight;
-        stepButtonY = rhythm[i] == 1 ?  stepButtonY : stepButtonY + (getHeight()-stepButtonHeight+1);
+        stepButtonY = rhythm[i] == 1 ?  stepButtonY : stepButtonY + (getHeight()-stepButtonHeight+1); // Steps at bottom of region
+        //stepButtonY = rhythm[i] == 1 ?  stepButtonY : stepButtonY + (getHeight()/2) - (stepButtonHeight/2); // Steps in middle of region
         stepButton->setBounds(stepButtonX, stepButtonY, stepButtonWidth, stepButtonHeight);
+        
+        stepButton->repaint();
     }
 }

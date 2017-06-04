@@ -9,8 +9,6 @@
 #ifndef GroovinatorUIRhythmComponent_h
 #define GroovinatorUIRhythmComponent_h
 
-#include <vector>
-
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #include "GroovinatorRhythmHandler.h"
@@ -22,8 +20,13 @@
 class GroovinatorUIStepButton : public Button
 {
 public:
-    GroovinatorUIStepButton(const String& buttonName);
+    GroovinatorUIStepButton(const String& buttonName, int index, int totalNumSteps, GroovinatorRhythmHandler& rhythmHandler);
     void paintButton(Graphics& g, bool isMouseOverButton, bool isButtonDown) override;
+    bool isPlayHeadAtStep();
+private:
+    int _index;
+    GroovinatorRhythmHandler& _rhythmHandler;
+    int _totalNumSteps;
 };
 
 //==============================================================================

@@ -80,6 +80,7 @@ public:
     double calculateSecondsPerBeat();
     int getPlayHeadBarNum(); // WIP
     int getPlayHeadRelativePulseNum(); // WIP
+    double calculateProportionOfMeasureElapsed(); // 0.0-1.0
 
 private:
     //void updateValuesFromPlayHead();
