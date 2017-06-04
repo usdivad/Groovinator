@@ -152,7 +152,19 @@ std::vector<int> GroovinatorRhythmHandler::calculatePulseLengths(GroovinatorRhyt
 
 std::vector<double> GroovinatorRhythmHandler::calculatePulseRatios(GroovinatorRhythmHandler::RhythmSequence originalRhythm, GroovinatorRhythmHandler::RhythmSequence targetRhythm)
 {
+    std::vector<double> pulseRatios;
     
+    std::vector<int> originalPulseLengths = GroovinatorRhythmHandler::calculatePulseLengths(originalRhythm);
+    std::vector<int> targetPulseLengths = GroovinatorRhythmHandler::calculatePulseLengths(targetRhythm);
+    
+    int numPulses = std::min(originalPulseLengths.size(), targetPulseLengths.size());
+    
+    for (size_t i=0; i<numPulses; i++)
+    {
+        pulseRatios.push_back(originalPulseLengths[i] / (double) targetPulseLengths[i]);
+    }
+    
+    return pulseRatios;
 }
 
 std::vector<double> GroovinatorRhythmHandler::calculateStepStretchRatios(GroovinatorRhythmHandler::RhythmSequence originalRhythm, GroovinatorRhythmHandler::RhythmSequence targetRhythm)
