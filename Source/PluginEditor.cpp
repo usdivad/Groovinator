@@ -225,6 +225,7 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                     // Rhythm
                     << ", origRhythm=" << rhythmHandler.getOriginalRhythmStr()
                     << ", trgtRhythm=" << rhythmHandler.getTargetRhythmStr()
+                    << ", stepStretchRatios=" << rhythmHandler.calculateStepStretchRatiosStr()
     
                     << " */";
     _debugLabel.setText(debugLabelText, sendNotification);

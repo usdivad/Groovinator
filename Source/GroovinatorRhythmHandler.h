@@ -42,6 +42,8 @@ public:
     // Utility methods
     void toggleOriginalRhythmStepAt(int i);
     void toggleTargetRhythmStepAt(int i);
+    std::vector<double> calculateStepStretchRatios();
+    std::string calculateStepStretchRatiosStr();
     
     // Fibonacci stretch methods (static)
     // Adapted from the Python implementations in fibonaccistretch.py

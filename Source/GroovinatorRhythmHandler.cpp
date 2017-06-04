@@ -116,6 +116,24 @@ void GroovinatorRhythmHandler::toggleTargetRhythmStepAt(int i)
     _targetRhythm[i] = _targetRhythm[i] == 1 ? 0 : 1;
 }
 
+std::vector<double> GroovinatorRhythmHandler::calculateStepStretchRatios()
+{
+    return GroovinatorRhythmHandler::calculateStepStretchRatios(_originalRhythm, _targetRhythm);
+}
+
+std::string GroovinatorRhythmHandler::calculateStepStretchRatiosStr()
+{
+    std::stringstream ss;
+    std::vector<double> ratios = calculateStepStretchRatios();
+    for (size_t i=0; i<ratios.size(); i++)
+    {
+        if (i != 0)
+            ss << ",";
+        ss << ratios[i];
+    }
+    return ss.str();
+}
+
 // Fibonacci stretch methods (static)
 std::vector<int> GroovinatorRhythmHandler::calculatePulseLengths(GroovinatorRhythmHandler::RhythmSequence rhythm)
 {
