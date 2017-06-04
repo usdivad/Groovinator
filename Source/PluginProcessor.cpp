@@ -162,9 +162,20 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     //_soundTouch.setChannels(totalNumInputChannels);
     _soundTouch.setChannels(1);
     _soundTouch.setRate(1.0);
+    _soundTouch.setSetting(SETTING_USE_QUICKSEEK, 1);
+    
+    // Set tempo
+    double rhythmProportion = _rhythmHandler.getProportionOfRhythmElapsed();
+    int rhythmNumSteps = _rhythmHandler.getOriginalNumSteps();
+    int rhythmStepIndex = GroovinatorRhythmHandler::proportionToStepIndex(rhythmProportion, rhythmNumSteps);
+    std::vector<double> rhythmStepStretchRatios = _rhythmHandler.calculateStepStretchRatios();
+    if (rhythmStepIndex >= 0 && rhythmStepIndex < rhythmStepStretchRatios.size())
+    {
+        _soundTouchTempo = rhythmStepStretchRatios[rhythmStepIndex];
+        _soundTouchTempo = std::min(_soundTouchTempo, 0.9);
+    }
     //_soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
     _soundTouch.setTempo(_soundTouchTempo);
-    _soundTouch.setSetting(SETTING_USE_QUICKSEEK, 1);
    
     
     // Audio reading and writing

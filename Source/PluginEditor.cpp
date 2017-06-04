@@ -73,8 +73,8 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     
     // Add components to editor
     //addAndMakeVisible(&_testSlider);
+    addAndMakeVisible(&_debugLabel);
     addAndMakeVisible(&_playHeadInfoLabel);
-    //addAndMakeVisible(&_debugLabel);
     addAndMakeVisible(&_originalRhythmLabel);
     addAndMakeVisible(&_targetRhythmLabel);
     addAndMakeVisible(&_originalRhythmBgRect);
@@ -117,7 +117,7 @@ void GroovinatorAudioProcessorEditor::resized()
     // subcomponents in your editor..
     _testSlider.setBounds(5, 80, 10, (getHeight()/2));
     _playHeadInfoLabel.setBounds(0, 40, getWidth(), 20);
-    _debugLabel.setBounds(0, getHeight()-60, getWidth(), 60);
+    _debugLabel.setBounds(0, getHeight()-33, getWidth(), 33);
     
     
     // Rhythm components
@@ -149,7 +149,7 @@ void GroovinatorAudioProcessorEditor::resized()
     double numStepsSliderHeight = 50;
     
     // Overall rhythm position
-    double originalRhythmY = 99;
+    double originalRhythmY = 80;
     double targetRhythmY = originalRhythmY + + rhythmLabelHeight + rhythmBgRectHeight + 33;
     
     _originalRhythmLabel.setBounds(rhythmLabelX, originalRhythmY + rhythmLabelYOffset, rhythmLabelWidth, rhythmLabelHeight);
@@ -235,17 +235,19 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                     << ", posSamps=" << String(processor.calculatePlayHeadRelativePositionInSamples())
                     << ", mostRecentSamp=" << String(processor.getMostRecentMeasureBufferSample())
                     << ", diff=" << String(processor.getMostRecentMeasureBufferSample()-processor.calculatePlayHeadRelativePositionInSamples())
-                    //<< ", soundTouchTempo=" << String(processor.getSoundTouchTempo())
+                    << ", soundTouchTempo=" << String(processor.getSoundTouchTempo())
                     << ", measureBufSz=" << String(processor.getMeasureBufferSize())
-                    << "\n"
+                    //<< "\n"
                     << ", measureNum=" << String(processor.getMeasuresElapsed())
                     << ", ioRatio=" << String(processor.getSoundTouchInputOutputRatio(), 2)
     
                     // Rhythm
-                    << ", origRhythm=" << rhythmHandler.getOriginalRhythmStr()
+                    << "\n"
+                    << "origRhythm=" << rhythmHandler.getOriginalRhythmStr()
                     << ", trgtRhythm=" << rhythmHandler.getTargetRhythmStr()
                     << ", stepStretchRatios=" << rhythmHandler.calculateStepStretchRatiosStr()
     
                     << " */";
     _debugLabel.setText(debugLabelText, sendNotification);
+    _debugLabel.toFront(false);
 }
