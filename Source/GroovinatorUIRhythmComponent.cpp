@@ -19,21 +19,33 @@ void GroovinatorUIStepButton::paintButton(Graphics& g, bool isMouseOverButton, b
 {
     if (isPlayHeadAtStep())
     {
-        g.fillAll(Colours::orangered);
-        return;
-    }
-    
-    if (isButtonDown)
-    {
-        g.fillAll(Colours::orange);
-    }
-    else if (isMouseOverButton)
-    {
-        g.fillAll(Colours::purple);
+        if (isButtonDown)
+        {
+            g.fillAll(Colours::orange);
+        }
+        else if (isMouseOverButton)
+        {
+            g.fillAll(Colours::tomato);
+        }
+        else
+        {
+            g.fillAll(Colours::orangered);
+        }
     }
     else
     {
-        g.fillAll(Colours::indigo);
+        if (isButtonDown)
+        {
+            g.fillAll(Colours::orange);
+        }
+        else if (isMouseOverButton)
+        {
+            g.fillAll(Colours::purple);
+        }
+        else
+        {
+            g.fillAll(Colours::indigo);
+        }
     }
 }
 
