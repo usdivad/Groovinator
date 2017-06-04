@@ -117,20 +117,6 @@ void GroovinatorRhythmHandler::toggleTargetRhythmStepAt(int i)
 }
 
 // Fibonacci stretch methods (static)
-GroovinatorRhythmHandler::RhythmSequence GroovinatorRhythmHandler::generateEuclideanRhythm(int numPulses, int numSteps)
-{
-    RhythmSequence rhythm;
-    std::string rhythmStr = BjorklundsAlgorithm::bjorklund(numPulses, numSteps);
-    for (size_t i=0; i<rhythmStr.size(); i++)
-    {
-        if (rhythmStr[i] == '0')
-            rhythm.push_back(0);
-        else
-            rhythm.push_back(1);
-    }
-    return rhythm;
-}
-
 std::vector<int> GroovinatorRhythmHandler::calculatePulseLengths(GroovinatorRhythmHandler::RhythmSequence rhythm)
 {
     std::vector<int> pulseIndices;
@@ -169,11 +155,98 @@ std::vector<double> GroovinatorRhythmHandler::calculatePulseRatios(GroovinatorRh
 
 std::vector<double> GroovinatorRhythmHandler::calculateStepStretchRatios(GroovinatorRhythmHandler::RhythmSequence originalRhythm, GroovinatorRhythmHandler::RhythmSequence targetRhythm)
 {
+    // Original and target pulse lengths
+    std::vector<int> originalPulseLengths = GroovinatorRhythmHandler::calculatePulseLengths(originalRhythm);
+    std::vector<int> targetPulseLengths = GroovinatorRhythmHandler::calculatePulseLengths(targetRhythm);
     
+    // Pulse ratios
+    std::vector<double> pulseRatios = GroovinatorRhythmHandler::calculatePulseRatios(originalRhythm, targetRhythm);
+    if (pulseRatios.size() < originalPulseLengths.size()) // Add 0s to pulse ratios if there aren't enough
+    {
+        for (size_t i=0; i < originalPulseLengths.size() - pulseRatios.size(); i++)
+        {
+            pulseRatios.push_back(0.0);
+        }
+    }
+    
+    // Format pulse ratios so there's one for each step
+    std::vector<double> pulseRatiosByStep;
+    for (size_t i=0; i<originalPulseLengths.size(); i++)
+    {
+        int pulseLength = originalPulseLengths[i];
+        for (size_t j=0; j<pulseLength; j++)
+        {
+            pulseRatiosByStep.push_back(pulseRatios[i]);
+        }
+    }
+    
+    // Calculate stretch ratios for each original step
+    // Adapted from Euclidean stretch
+    std::vector<double> stepStretchRatios;
+    for (size_t i=0; i<std::min(originalPulseLengths.size(), targetPulseLengths.size()); i++)
+    {
+        // Pulse lengths
+        int opl = originalPulseLengths[i];
+        int tpl = targetPulseLengths[i];
+        
+        // Adjust target pulse length if it's too small
+        while (opl > tpl)
+            tpl *= 2;
+        
+        // Use steps as original pulse rhythm ("opr")
+        RhythmSequence opr;
+        for (size_t j=0; j<originalRhythm.size(); j++)
+        {
+            opr.push_back(1);
+        }
+        
+        // Generate target pulse rhythm ("tpr") using Bjorklund's algorithm
+        RhythmSequence tpr = GroovinatorRhythmHandler::generateEuclideanRhythm(opl, tpl);
+        std::vector<int> tprPulseLengths = GroovinatorRhythmHandler::calculatePulseLengths(tpr);
+        std::vector<double> tprPulseRatios = GroovinatorRhythmHandler::calculatePulseRatios(opr, tpr);
+        
+        // Scale the tpr pulse ratios by the corresponding ratio from pulseRatiosByStep
+        for (size_t j=0; j<tprPulseRatios.size(); j++)
+        {
+            tprPulseRatios[j] *= pulseRatiosByStep[i];
+        }
+        
+        // Append the ratios to step stretch ratios
+        stepStretchRatios.insert(stepStretchRatios.end(), tprPulseRatios.begin(), tprPulseRatios.end());
+    }
+    
+    // Multiply by stretch multiplier to make sure the length is same as original
+    // TODO
+    double stepStretchRatiosSum;
+    for (size_t i=0; i<stepStretchRatios.size(); i++)
+    {
+        stepStretchRatiosSum += stepStretchRatios[i];
+    }
+    double stretchMultiplier = 1.0 / (stepStretchRatiosSum / (double) originalRhythm.size());
+    for (size_t i=0; i<stepStretchRatios.size(); i++)
+    {
+        stepStretchRatios[i] *= stretchMultiplier;
+    }
+    
+    return stepStretchRatios;
 }
 
 
 // Other static methods
+GroovinatorRhythmHandler::RhythmSequence GroovinatorRhythmHandler::generateEuclideanRhythm(int numPulses, int numSteps)
+{
+    RhythmSequence rhythm;
+    std::string rhythmStr = BjorklundsAlgorithm::bjorklund(numPulses, numSteps);
+    for (size_t i=0; i<rhythmStr.size(); i++)
+    {
+        if (rhythmStr[i] == '0')
+            rhythm.push_back(0);
+        else
+            rhythm.push_back(1);
+    }
+    return rhythm;
+}
+
 std::string GroovinatorRhythmHandler::rhythmToString(RhythmSequence rhythm)
 {
     std::stringstream ss;
