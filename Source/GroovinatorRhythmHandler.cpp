@@ -117,7 +117,8 @@ void GroovinatorRhythmHandler::toggleTargetRhythmStepAt(int i)
 
 std::vector<double> GroovinatorRhythmHandler::calculateStepStretchRatios()
 {
-    return GroovinatorRhythmHandler::calculateStepStretchRatios(_originalRhythm, _targetRhythm);
+    std::vector<double> ratios = GroovinatorRhythmHandler::calculateStepStretchRatios(_originalRhythm, _targetRhythm);
+    return ratios;
 }
 
 std::string GroovinatorRhythmHandler::calculateStepStretchRatiosStr()
@@ -233,7 +234,7 @@ std::vector<double> GroovinatorRhythmHandler::calculateStepStretchRatios(Groovin
     }
     
     // Multiply by stretch multiplier to make sure the length is same as original
-    // TODO
+    /*
     double stepStretchRatiosSum;
     for (size_t i=0; i<stepStretchRatios.size(); i++)
     {
@@ -244,6 +245,7 @@ std::vector<double> GroovinatorRhythmHandler::calculateStepStretchRatios(Groovin
     {
         stepStretchRatios[i] *= stretchMultiplier;
     }
+    */
     
     return stepStretchRatios;
 }

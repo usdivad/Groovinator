@@ -172,7 +172,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
     if (rhythmStepIndex >= 0 && rhythmStepIndex < rhythmStepStretchRatios.size())
     {
         _soundTouchTempo = rhythmStepStretchRatios[rhythmStepIndex];
-        _soundTouchTempo = std::min(_soundTouchTempo, 0.9);
+        _soundTouchTempo = std::min(std::max(_soundTouchTempo, 0.1), 0.9);
     }
     //_soundTouchTempo = 0.5; // Hard-code this to test (doesn't work yet for >1.0)
     _soundTouch.setTempo(_soundTouchTempo);
