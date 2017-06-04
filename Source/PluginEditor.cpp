@@ -21,7 +21,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (640, 396);
     
     // Test slider (pitch-shift, rate, etc. depending on the need...)
     _testSlider.setSliderStyle(Slider::LinearVertical);
@@ -68,7 +68,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _targetNumStepsLabel.setText("# steps", dontSendNotification);
     
     // Add components to editor
-    addAndMakeVisible(&_testSlider);
+    //addAndMakeVisible(&_testSlider);
     addAndMakeVisible(&_playHeadInfoLabel);
     addAndMakeVisible(&_debugLabel);
     addAndMakeVisible(&_originalNumStepsSlider);
@@ -117,13 +117,14 @@ void GroovinatorAudioProcessorEditor::resized()
     // Rhythm components
     // Component positions will generally go in the format:
     // .setBounds(<componentName>X, <original/target>RhythmY + <componentName>YOffset, <componentName>Width, <componentName>Height)
-    double originalRhythmY = 80;
-    double targetRhythmY = originalRhythmY + 100;
     
     double rhythmBgRectX = 20;
     double rhythmBgRectYOffset = 0;
     double rhythmBgRectWidth = (getWidth() - (2*rhythmBgRectX)) * 0.8;
-    double rhythmBgRectHeight = 75;
+    double rhythmBgRectHeight = 99;
+    
+    double originalRhythmY = 99;
+    double targetRhythmY = originalRhythmY + rhythmBgRectHeight + 33;
     
     double numStepsWidth = 60;
     double numStepsX = getWidth() - rhythmBgRectX - numStepsWidth; // rhythmBgRectX + rhythmBgRectWidth + 10;
