@@ -38,7 +38,7 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
     _measuresElapsed(0),
     _hasMeasureBufferBeenSet(false),
 
-    _processMode(kSamplesAndSilence)
+    _processMode(kManualResample)
 {
 }
 
@@ -216,7 +216,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         {
             measureBufferSize = (int) (calculateNumSamplesPerMeasure() * _soundTouch.getInputOutputRatio());
         }
-        else if (_processMode == kSamplesAndSilence)
+        else if (_processMode == kManualResample)
         {
             double ratioSum;
             double ratioAvg;
@@ -364,7 +364,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 }
             }
         }
-        else if (_processMode == kSamplesAndSilence)
+        else if (_processMode == kManualResample)
         {
             // Process and write measure buffer samples, if we can
             float* measureChannelData = _measureBuffer.getWritePointer (channel, _mostRecentMeasureBufferSample);
@@ -372,14 +372,26 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
             if (canWriteToMeasureBuffer)
             {
-                // Put samples and add silence
+                // Put samples and add silence (leads to choppiness)
                 //_measureBuffer.copyFrom(channel, 0, _measureBuffer, channel, posInSamples, numSamples);
-                for (size_t sampleIdx=0; sampleIdx<numOutputSamples; sampleIdx++)
+//                for (size_t sampleIdx=0; sampleIdx<numOutputSamples; sampleIdx++)
+//                {
+//                    if (sampleIdx < numSamples)
+//                    {
+//                        measureChannelData[sampleIdx] = channelData[sampleIdx]; // Sample
+//                    }
+//                    else
+//                    {
+//                        measureChannelData[sampleIdx] = 0.0; // Silence
+//                        measureChannelData[sampleIdx] = channelData[numSamples-1]; // Last sample of measure
+//                    }
+//                }
+                
+                // Copy input samples according to ratio (leads to pitch shifting, but can sound cool)
+                for (size_t outputSampleIdx=0; outputSampleIdx<numOutputSamples; outputSampleIdx++)
                 {
-                    if (sampleIdx < numSamples)
-                        measureChannelData[sampleIdx] = channelData[sampleIdx]; // Sample
-                    else
-                        measureChannelData[sampleIdx] = 0.0; // Silence
+                    int inputSampleIdx = (int) ((outputSampleIdx/(double)numOutputSamples) * numSamples);
+                    measureChannelData[outputSampleIdx] = channelData[inputSampleIdx];
                 }
                 
                 // Update most recent sample index

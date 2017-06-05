@@ -89,7 +89,7 @@ private:
     {
         kSoundTouchTimeStretch,
         kSoundTouchPitchShift,
-        kSamplesAndSilence
+        kManualResample
     };
 
     //==============================================================================
