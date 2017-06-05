@@ -38,7 +38,7 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
     _measuresElapsed(0),
     _hasMeasureBufferBeenSet(false),
 
-    _processMode(kSoundTouchTimeStretch)
+    _processMode(kSamplesAndSilence)
 {
 }
 
@@ -225,7 +225,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 ratioSum += rhythmStepStretchRatios[i];
             }
             ratioAvg = ratioSum / rhythmStepStretchRatios.size();
-            measureBufferSize = (int) (calculateNumSamplesPerMeasure() * ratioAvg);
+            measureBufferSize = (int) (calculateNumSamplesPerMeasure() / ratioAvg);
         }
         
         _measureBuffer = AudioSampleBuffer(totalNumInputChannels, measureBufferSize);
@@ -368,7 +368,7 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         {
             // Process and write measure buffer samples, if we can
             float* measureChannelData = _measureBuffer.getWritePointer (channel, _mostRecentMeasureBufferSample);
-            int numOutputSamples = (int) (stepStretchRatio * numSamples);
+            int numOutputSamples = (int) (numSamples / stepStretchRatio);
             bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
             if (canWriteToMeasureBuffer)
             {
@@ -381,6 +381,9 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                     else
                         measureChannelData[sampleIdx] = 0.0; // Silence
                 }
+                
+                // Update most recent sample index
+                _mostRecentMeasureBufferSample += numOutputSamples;
             }
             
             // Write output samples from measure buffer
