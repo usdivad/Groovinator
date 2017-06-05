@@ -287,16 +287,11 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
             bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
             if (canWriteToMeasureBuffer)
             {
-                // Try writing to a temp buffer and then only copying numOutputSamples samples to the actual measure buffer!
-                //AudioSampleBuffer tmpBuf = AudioSampleBuffer(1, numOutputSamples);
-                //float* tmpChannelData = tmpBuf.getWritePointer(0);
-                
                 // Clear measure buffer following most recent sample
-                //_measureBuffer.clear(channel, _mostRecentMeasureBufferSample, numOutputSamples);
+                // TODO: Fix behavior here!!
                 //_measureBuffer.clear(channel, 0, _measureBuffer.getNumSamples());
                 
                 // Receive samples from SoundTouch
-                //_soundTouch.flush();
                 //do
                 //{
                 //    receiveIterationNum++;
@@ -308,23 +303,11 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 //while (numReceivedSamples != 0);
                 ////while (numReceivedSamples != 0 && numReceivedSamples != numOutputSamples);
                 numReceivedSamples = _soundTouch.receiveSamples(measureChannelData, numOutputSamples);
-                
-                // Copy samples from tmp channel to measure channel
-                //_measureBuffer.copyFrom(channel, _mostRecentMeasureBufferSample, tmpBuf, 0, 0, numOutputSamples);
             
                 // Update most recent sample index
                 //_mostRecentMeasureBufferSample += numOutputSamples;
                 _mostRecentMeasureBufferSample += numReceivedSamples;
-                //_mostRecentMeasureBufferSample = std::min(_mostRecentMeasureBufferSample + numOutputSamples, _measureBuffer.getNumSamples()-1);
-                //_mostRecentMeasureBufferSample = std::min(_mostRecentMeasureBufferSample + totalNumReceivedSamples, _measureBuffer.getNumSamples()-1);
-                
-                // Clear extraneous samples
-                //_measureBuffer.clear(channel, _mostRecentMeasureBufferSample, _measureBuffer.getNumSamples() - _mostRecentMeasureBufferSample);
             }
-            
-            // Clear output buffer (so we don't get remnants of the original,
-            // esp when nothing is written to output)
-            //buffer.clear(channel, 0, buffer.getNumSamples());
             
             // Write output samples from measure buffer
             int posInSamples = calculatePlayHeadRelativePositionInSamples();
@@ -338,18 +321,6 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 
                 const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
                 
-                // Write using SoundTouch object
-                //            st.setSampleRate(_sampleRate);
-                //            st.setChannels(1);
-                //            st.putSamples(measureChannelOutputData, numSamples);
-                //            int numReceivedSamples = 0;
-                //            do
-                //            {
-                //                numReceivedSamples = st.receiveSamples(channelData, numSamples);
-                //            }
-                //            while (numReceivedSamples != 0 && numReceivedSamples != numSamples);
-                //
-                
                 // Write manually
                 for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
                 //for (int sampleIdx=0; sampleIdx<numReceivedSamples; sampleIdx++)
@@ -357,9 +328,6 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
                 {
                     channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
                 }
-                
-                // Write using AudioBuffer::copyFrom
-                //            buffer.copyFrom(channel, 0, _measureBuffer, channel, posInSamples, numSamples);
             }
         } // End tempo stretch
     }
