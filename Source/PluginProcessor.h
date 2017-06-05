@@ -89,9 +89,18 @@ private:
     {
         kSoundTouchTimeStretch,
         kSoundTouchPitchShift,
-        kManualResample
+        kManualResample,
+        kManualConcatenateWithSilence
     };
-
+    
+    // Processing methods called by processBlock()
+    void preprocessUpdate(AudioPlayHead* playHead, double sampleRate, int numSamples);
+    void preprocessClearBuffer(AudioSampleBuffer& buffer);
+    void processChannelSoundTouchPitchShift(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
+    void processChannelSoundTouchTimeStretch(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
+    void processChannelManualResample(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
+    void processChannelManualConcatenateWithSilence(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
+    
     //==============================================================================
     // Audio playback stuff
     //float _freq;
@@ -99,11 +108,13 @@ private:
     
     soundtouch::SoundTouch _soundTouch;
     double _soundTouchTempo;
+    double _stepStretchRatio;
 
     AudioPlayHead* _playHead;
     AudioPlayHead::CurrentPositionInfo _playHeadInfo;
     int _prevPlayHeadTimeInSamples;
     bool _hasPlayHeadBeenSet;
+    int _playHeadTimeDiff;
     
     AudioSampleBuffer _measureBuffer;
     int _mostRecentMeasureBufferSample;
