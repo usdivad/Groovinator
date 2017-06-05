@@ -84,6 +84,13 @@ public:
 
 private:
     //void updateValuesFromPlayHead();
+    
+    enum ProcessMode
+    {
+        kSoundTouchTimeStretch,
+        kSoundTouchPitchShift,
+        kSamplesAndSilence
+    };
 
     //==============================================================================
     // Audio playback stuff
@@ -103,6 +110,8 @@ private:
     double _mostRecentMeasureStartPpq;
     int _measuresElapsed;
     bool _hasMeasureBufferBeenSet;
+    
+    ProcessMode _processMode;
     
     //==============================================================================
     // Symbolic rhythm
