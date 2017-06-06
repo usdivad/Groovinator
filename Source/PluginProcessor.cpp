@@ -498,14 +498,6 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
     GroovinatorRhythmHandler::RhythmSequence originalRhythm = _rhythmHandler.getOriginalRhythm();
     int mostRecentOriginalPulseIdx = 0;
     int mostRecentOriginalStepIdx = 0;
-//    for (int i=originalRhythm.size()-1; i>=0; i--)
-//    {
-//        if (originalRhythm[i] == 1 && numSamplesPerOriginalStep*originalStepIdx < _mostRecentMeasureBufferSample)
-//        {
-//            mostRecentOriginalPulseIdx = i;
-//            break;
-//        }
-//    }
     for (size_t i=0; i<originalRhythm.size(); i++)
     {
         if (numSamplesPerOriginalStep*originalStepIdx < _mostRecentMeasureBufferSample)
@@ -521,9 +513,9 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
     
     // Write output samples from measure buffer
     bool onlyUsePulses = true;
-    int posInSamples = (mostRecentOriginalStepIdx * numSamplesPerOriginalStep) + proportionOfOriginalStepElapsedInSamples;
+    int posInSamples = (mostRecentOriginalStepIdx * numSamplesPerOriginalStep) + proportionOfTargetStepElapsedInSamples;
     if (onlyUsePulses)
-        posInSamples = (mostRecentOriginalPulseIdx * numSamplesPerOriginalStep) + proportionOfOriginalStepElapsedInSamples;
+        posInSamples = (mostRecentOriginalPulseIdx * numSamplesPerOriginalStep) + proportionOfTargetStepElapsedInSamples;
 //    if (targetStepIsPulse)// && mostRecentOriginalPulseIdx >=0)
     {
         const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
