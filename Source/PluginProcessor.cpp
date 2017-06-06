@@ -500,7 +500,7 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
     int mostRecentOriginalStepIdx = 0;
     for (size_t i=0; i<originalRhythm.size(); i++)
     {
-        if (numSamplesPerOriginalStep*originalStepIdx < _mostRecentMeasureBufferSample)
+        if ((numSamplesPerOriginalStep * i) + proportionOfOriginalStepElapsedInSamples < _mostRecentMeasureBufferSample)
         {
             mostRecentOriginalStepIdx = i;
             if (originalRhythm[i] == 1)
@@ -530,6 +530,7 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
     _processDebugMessage    << "proportionOfStepElapsed=" << proportionOfStepElapsed
                             << ", posInSamples=" << posInSamples
                             << ", mostRecentOriginalPulseIdx=" << mostRecentOriginalPulseIdx
+                            << ", posInSamples=" << posInSamples
                             << "";
     
     
