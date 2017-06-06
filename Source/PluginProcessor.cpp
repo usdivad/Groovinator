@@ -39,7 +39,7 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
     _measuresElapsed(0),
     _hasMeasureBufferBeenSet(false),
 
-    _processMode(kManualResample)
+    _processMode(kManualConcatenateSteps)
 {
 }
 
@@ -139,6 +139,9 @@ bool GroovinatorAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 
 void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    // Clear debug message
+    _processDebugMessage = "";
+    
     // ================================
     // Preprocessing
     double sampleRate = getSampleRate();
@@ -184,6 +187,10 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
         else if (_processMode == kManualResample) // Manually resample
         {
             processChannelManualResample(channelData, buffer, channel, sampleRate, numSamples);
+        }
+        else if (_processMode == kManualConcatenateSteps) // Concatenate with silence
+        {
+            processChannelManualConcatenateSteps(channelData, buffer, channel, sampleRate, numSamples);
         }
     }
 }
@@ -259,6 +266,10 @@ void GroovinatorAudioProcessor::preprocessUpdate(AudioPlayHead* playHead, double
             }
             ratioAvg = ratioSum / rhythmStepStretchRatios.size();
             measureBufferSize = (int) (calculateNumSamplesPerMeasure() / ratioAvg);
+        }
+        else if (_processMode == kManualConcatenateSteps)
+        {
+            measureBufferSize = calculateNumSamplesPerMeasure();
         }
         
         _measureBuffer = AudioSampleBuffer(getTotalNumInputChannels(), measureBufferSize);
@@ -453,9 +464,100 @@ void GroovinatorAudioProcessor::processChannelManualResample(float* channelData,
     }
 }
 
-void GroovinatorAudioProcessor::processChannelManualConcatenateWithSilence(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples)
+void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples)
 {
+    // Process and write measure buffer samples, if we can
+    float* measureChannelData = _measureBuffer.getWritePointer (channel, _mostRecentMeasureBufferSample);
+    bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample + numSamples);
+    if (canWriteToMeasureBuffer)
+    {
+        // Simply copy samples from channel to measure
+        for (size_t sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
+        {
+            measureChannelData[sampleIdx] = channelData[sampleIdx];
+        }
+        
+        // Update most recent sample index
+        _mostRecentMeasureBufferSample += numSamples;
+    }
     
+    // Calculate original and target sample positions
+    int numSamplesPerOriginalStep = (int) (calculateNumSamplesPerMeasure() / _rhythmHandler.getOriginalNumSteps());
+    int numSamplesPerTargetStep = (int) (calculateNumSamplesPerMeasure() / _rhythmHandler.getTargetNumSteps());
+    
+    int originalStepIdx = (int) (calculateProportionOfMeasureElapsed() * _rhythmHandler.getOriginalNumSteps());
+    int targetStepIdx = (int) (calculateProportionOfMeasureElapsed() * _rhythmHandler.getTargetNumSteps());
+    
+    int proportionOfOriginalStepElapsedInSamples = calculatePlayHeadRelativePositionInSamples() % numSamplesPerOriginalStep;
+    double proportionOfStepElapsed = proportionOfOriginalStepElapsedInSamples / (double) numSamplesPerOriginalStep;
+    int proportionOfTargetStepElapsedInSamples = (int) (proportionOfStepElapsed * numSamplesPerTargetStep);
+    
+    bool originalStepIsPulse = _rhythmHandler.getOriginalRhythm()[originalStepIdx] == 1;
+    bool targetStepIsPulse = _rhythmHandler.getOriginalRhythm()[targetStepIdx] == 1;
+    
+    GroovinatorRhythmHandler::RhythmSequence originalRhythm = _rhythmHandler.getOriginalRhythm();
+    int mostRecentOriginalPulseIdx = 0;
+    int mostRecentOriginalStepIdx = 0;
+//    for (int i=originalRhythm.size()-1; i>=0; i--)
+//    {
+//        if (originalRhythm[i] == 1 && numSamplesPerOriginalStep*originalStepIdx < _mostRecentMeasureBufferSample)
+//        {
+//            mostRecentOriginalPulseIdx = i;
+//            break;
+//        }
+//    }
+    for (size_t i=0; i<originalRhythm.size(); i++)
+    {
+        if (numSamplesPerOriginalStep*originalStepIdx < _mostRecentMeasureBufferSample)
+        {
+            mostRecentOriginalStepIdx = i;
+            if (originalRhythm[i] == 1)
+                mostRecentOriginalPulseIdx = i;
+        }
+    }
+    
+    // Clear output buffer
+    buffer.clear(channel, 0, numSamples);
+    
+    // Write output samples from measure buffer
+    bool onlyUsePulses = true;
+    int posInSamples = (mostRecentOriginalStepIdx * numSamplesPerOriginalStep) + proportionOfOriginalStepElapsedInSamples;
+    if (onlyUsePulses)
+        posInSamples = (mostRecentOriginalPulseIdx * numSamplesPerOriginalStep) + proportionOfOriginalStepElapsedInSamples;
+//    if (targetStepIsPulse)// && mostRecentOriginalPulseIdx >=0)
+    {
+        const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
+
+        // Write manually
+        for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
+        {
+            channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
+        }
+    }
+    
+    _processDebugMessage    << "proportionOfStepElapsed=" << proportionOfStepElapsed
+                            << ", posInSamples=" << posInSamples
+                            << ", mostRecentOriginalPulseIdx=" << mostRecentOriginalPulseIdx
+                            << "";
+    
+    
+//    int posInSamples = calculatePlayHeadRelativePositionInSamples();
+//    int endPosInSamples = posInSamples + numSamples;
+//    //int endPosInSamples = posInSamples + numOutputSamples;
+//    bool canWriteOutput = endPosInSamples < _mostRecentMeasureBufferSample && endPosInSamples < _measureBuffer.getNumSamples();
+//    if (canWriteOutput)
+//    {
+//        // Clear output buffer
+//        buffer.clear(channel, 0, buffer.getNumSamples());
+//        
+//        const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
+//        
+//        // Write manually
+//        for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
+//        {
+//            channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
+//        }
+//    }
 }
 
 //==============================================================================
@@ -555,6 +657,10 @@ GroovinatorRhythmHandler& GroovinatorAudioProcessor::getRhythmHandler()
     return _rhythmHandler;
 }
 
+ String GroovinatorAudioProcessor::getProcessDebugMessage()
+{
+    return _processDebugMessage;
+}
 
 // Setters
 void GroovinatorAudioProcessor::setTestSliderValue(float v)

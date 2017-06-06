@@ -240,6 +240,7 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                     //<< "\n"
                     << ", measureNum=" << String(processor.getMeasuresElapsed())
                     << ", ioRatio=" << String(processor.getSoundTouchInputOutputRatio(), 2)
+                    << ", " << processor.getProcessDebugMessage()
     
                     // Rhythm
                     << "\n"

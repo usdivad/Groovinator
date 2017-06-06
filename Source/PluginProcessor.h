@@ -69,6 +69,7 @@ public:
     int getMeasuresElapsed();
     double getSoundTouchInputOutputRatio();
     GroovinatorRhythmHandler& getRhythmHandler();
+    String getProcessDebugMessage();
     
     // ... and custom setters
     void setTestSliderValue(float v);
@@ -90,7 +91,7 @@ private:
         kSoundTouchTimeStretch,
         kSoundTouchPitchShift,
         kManualResample,
-        kManualConcatenateWithSilence
+        kManualConcatenateSteps
     };
     
     // Processing methods called by processBlock()
@@ -99,7 +100,7 @@ private:
     void processChannelSoundTouchPitchShift(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
     void processChannelSoundTouchTimeStretch(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
     void processChannelManualResample(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
-    void processChannelManualConcatenateWithSilence(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
+    void processChannelManualConcatenateSteps(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples);
     
     //==============================================================================
     // Audio playback stuff
@@ -127,6 +128,10 @@ private:
     //==============================================================================
     // Symbolic rhythm
     GroovinatorRhythmHandler _rhythmHandler;
+    
+    //==============================================================================
+    // Debugging
+    String _processDebugMessage;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessor)
