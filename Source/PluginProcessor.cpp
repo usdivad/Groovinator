@@ -34,7 +34,6 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
     _hasPlayHeadBeenSet(false),
 
     _measureBuffer(),
-    _mostRecentMeasureBufferSample(0),
     _mostRecentMeasureStartPpq(0.0),
     _measuresElapsed(0),
     _hasMeasureBufferBeenSet(false),
@@ -172,10 +171,35 @@ void GroovinatorAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuf
 
         // ..do something to the data...
         
-        // (but not if there are no samples)
+        // (...but not if there are no samples)
         if (numSamples == 0)
             continue;
+        
+        // (...nor if the channel number is greater than the number of channels in our measure buffer)
+        if (channel >= _mostRecentMeasureBufferSamplesByChannel.size())
+        {
+            _processDebugMessage << ", " << channel << ">=" << _mostRecentMeasureBufferSamplesByChannel.size();
+            continue;
+        }
 
+        //----
+        // TESTING
+//        float tmpData[numSamples];
+//        for (size_t i=0; i<numSamples; i++)
+//        {
+//            tmpData[i] = channelData[i];
+//        }
+//        
+//        buffer.clear(channel, 0, numSamples);
+//        
+//        for (size_t i=0; i<numSamples; i++)
+//        {
+//            channelData[i] = tmpData[i];
+//        }
+//        
+//        continue;
+        //----
+        
         if (_processMode == kSoundTouchPitchShift) // Pitch shift
         {
             processChannelSoundTouchPitchShift(channelData, buffer, channel, sampleRate, numSamples);
@@ -273,14 +297,17 @@ void GroovinatorAudioProcessor::preprocessUpdate(AudioPlayHead* playHead, double
         }
         
         _measureBuffer = AudioSampleBuffer(getTotalNumInputChannels(), measureBufferSize);
+        _mostRecentMeasureBufferSamplesByChannel.clear();
         _hasMeasureBufferBeenSet = true;
         
         for (int i=0; i<_measureBuffer.getNumChannels(); i++)
+        {
             _measureBuffer.clear(i, 0, _measureBuffer.getNumSamples()); // Make sure to clear measure buffer so we don't get a nasty pop when first playing
         
-        // Reset most recent _measureBuffer sample index
-        //_mostRecentMeasureBufferSample = std::max(calculatePlayHeadRelativePositionInSamples(), 0);
-        _mostRecentMeasureBufferSample = 0;
+            // Reset most recent _measureBuffer sample index
+            //_mostRecentMeasureBufferSample = std::max(calculatePlayHeadRelativePositionInSamples(), 0);
+            _mostRecentMeasureBufferSamplesByChannel.push_back(0);
+        }
         
         _measuresElapsed++;
     }
@@ -355,14 +382,15 @@ void GroovinatorAudioProcessor::processChannelSoundTouchTimeStretch(float* chann
     _soundTouch.putSamples(channelData, numSamples);
     
     // Process and write measure buffer samples, if we can
-    float* measureChannelData = _measureBuffer.getWritePointer (channel, _mostRecentMeasureBufferSample);
+    int mostRecentMeasureBufferSample = _mostRecentMeasureBufferSamplesByChannel[channel];
+    float* measureChannelData = _measureBuffer.getWritePointer (channel, mostRecentMeasureBufferSample);
     int totalNumReceivedSamples = 0;
     int numReceivedSamples = 0;
     int receiveIterationNum = 0;
     //int numOutputSamples = (int) (numSamples / _soundTouchTempo);
     int numOutputSamples = (int) (_soundTouch.getInputOutputRatio() * numSamples);
     //int numOutputSamples = (int) (_soundTouchTempo * numSamples);
-    bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
+    bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
     if (canWriteToMeasureBuffer)
     {
         // Stretch via SoundTouch
@@ -385,14 +413,14 @@ void GroovinatorAudioProcessor::processChannelSoundTouchTimeStretch(float* chann
         
         // Update most recent sample index
         //_mostRecentMeasureBufferSample += numOutputSamples;
-        _mostRecentMeasureBufferSample += numReceivedSamples;
+        mostRecentMeasureBufferSample += numReceivedSamples;
     }
     
     // Write output samples from measure buffer
     int posInSamples = calculatePlayHeadRelativePositionInSamples();
     //int endPosInSamples = posInSamples + numSamples;
     int endPosInSamples = posInSamples + numReceivedSamples;
-    bool canWriteOutput = endPosInSamples < _mostRecentMeasureBufferSample && endPosInSamples < _measureBuffer.getNumSamples();
+    bool canWriteOutput = endPosInSamples < mostRecentMeasureBufferSample && endPosInSamples < _measureBuffer.getNumSamples();
     if (canWriteOutput)
     {
         // Clear output buffer
@@ -408,14 +436,18 @@ void GroovinatorAudioProcessor::processChannelSoundTouchTimeStretch(float* chann
             channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
         }
     }
+    
+    // Update most recent measure buffer sample for this channel
+    _mostRecentMeasureBufferSamplesByChannel[channel] = mostRecentMeasureBufferSample;
 }
 
 void GroovinatorAudioProcessor::processChannelManualResample(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples)
 {
     // Process and write measure buffer samples, if we can
-    float* measureChannelData = _measureBuffer.getWritePointer (channel, _mostRecentMeasureBufferSample);
+    int mostRecentMeasureBufferSample = _mostRecentMeasureBufferSamplesByChannel[channel];
+    float* measureChannelData = _measureBuffer.getWritePointer (channel, mostRecentMeasureBufferSample);
     int numOutputSamples = (int) (numSamples / _stepStretchRatio);
-    bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
+    bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > mostRecentMeasureBufferSample+numOutputSamples); // && (_mostRecentMeasureBufferSample+numOutputSamples < calculateNumSamplesPerMeasure())
     if (canWriteToMeasureBuffer)
     {
         // Put samples and add silence (leads to choppiness)
@@ -441,14 +473,14 @@ void GroovinatorAudioProcessor::processChannelManualResample(float* channelData,
         }
         
         // Update most recent sample index
-        _mostRecentMeasureBufferSample += numOutputSamples;
+        mostRecentMeasureBufferSample += numOutputSamples;
     }
     
     // Write output samples from measure buffer
     int posInSamples = calculatePlayHeadRelativePositionInSamples();
     int endPosInSamples = posInSamples + numSamples;
     //int endPosInSamples = posInSamples + numOutputSamples;
-    bool canWriteOutput = endPosInSamples < _mostRecentMeasureBufferSample && endPosInSamples < _measureBuffer.getNumSamples();
+    bool canWriteOutput = endPosInSamples < mostRecentMeasureBufferSample && endPosInSamples < _measureBuffer.getNumSamples();
     if (canWriteOutput)
     {
         // Clear output buffer
@@ -462,13 +494,17 @@ void GroovinatorAudioProcessor::processChannelManualResample(float* channelData,
             channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
         }
     }
+    
+    // Update most recent measure buffer sample for this channel
+    _mostRecentMeasureBufferSamplesByChannel[channel] = mostRecentMeasureBufferSample;
 }
 
 void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* channelData, AudioSampleBuffer& buffer, int channel, double sampleRate, int numSamples)
 {
     // Process and write measure buffer samples, if we can
-    float* measureChannelData = _measureBuffer.getWritePointer (channel, _mostRecentMeasureBufferSample);
-    bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > _mostRecentMeasureBufferSample + numSamples);
+    int mostRecentMeasureBufferSample = _mostRecentMeasureBufferSamplesByChannel[channel];
+    float* measureChannelData = _measureBuffer.getWritePointer (channel, mostRecentMeasureBufferSample);
+    bool canWriteToMeasureBuffer = (_measureBuffer.getNumSamples() > mostRecentMeasureBufferSample + numSamples);
     if (canWriteToMeasureBuffer)
     {
         // Simply copy samples from channel to measure
@@ -478,7 +514,7 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
         }
         
         // Update most recent sample index
-        _mostRecentMeasureBufferSample += numSamples;
+        mostRecentMeasureBufferSample += numSamples;
     }
     
     // Calculate original and target sample positions
@@ -500,7 +536,7 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
     int mostRecentOriginalStepIdx = 0;
     for (size_t i=0; i<originalRhythm.size(); i++)
     {
-        if ((numSamplesPerOriginalStep * i) + proportionOfOriginalStepElapsedInSamples < _mostRecentMeasureBufferSample)
+        if ((numSamplesPerOriginalStep * i) + proportionOfOriginalStepElapsedInSamples < mostRecentMeasureBufferSample)
         {
             mostRecentOriginalStepIdx = i;
             if (originalRhythm[i] == 1)
@@ -516,7 +552,7 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
     int posIdx = onlyUsePulses ? mostRecentOriginalPulseIdx : mostRecentOriginalStepIdx;
     //int posInSamples = (posIdx * numSamplesPerOriginalStep) + proportionOfTargetStepElapsedInSamples; // Using target proportion elapsed; good as a basis for some actual time-stretching, but not here
     int posInSamples = (posIdx * numSamplesPerOriginalStep) + proportionOfOriginalStepElapsedInSamples; // Using original proportion elapsed
-    posInSamples = std::min(posInSamples, _mostRecentMeasureBufferSample - numSamples - 1);
+    posInSamples = std::min(posInSamples, mostRecentMeasureBufferSample - numSamples - 1);
     //if (targetStepIsPulse)// && mostRecentOriginalPulseIdx >=0)
     {
         const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
@@ -528,30 +564,20 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
         }
     }
     
+    // Update most recent measure buffer sample for this channel
+    _mostRecentMeasureBufferSamplesByChannel[channel] = mostRecentMeasureBufferSample;
+    
     _processDebugMessage    << "proportionOfStepElapsed=" << proportionOfStepElapsed
                             << ", posInSamples=" << posInSamples
                             << ", mostRecentOriginalPulseIdx=" << mostRecentOriginalPulseIdx
                             << ", posInSamples=" << posInSamples
+    
+                            << "\n"
+                            << "sampleRate=" << sampleRate
+                            << ", numSamples=" << numSamples
+                            << ", totalNumInputChannels=" << getTotalNumInputChannels()
+                            << ", totalNumOutputChannels=" << getTotalNumOutputChannels()
                             << "";
-    
-    
-//    int posInSamples = calculatePlayHeadRelativePositionInSamples();
-//    int endPosInSamples = posInSamples + numSamples;
-//    //int endPosInSamples = posInSamples + numOutputSamples;
-//    bool canWriteOutput = endPosInSamples < _mostRecentMeasureBufferSample && endPosInSamples < _measureBuffer.getNumSamples();
-//    if (canWriteOutput)
-//    {
-//        // Clear output buffer
-//        buffer.clear(channel, 0, buffer.getNumSamples());
-//        
-//        const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);
-//        
-//        // Write manually
-//        for (int sampleIdx=0; sampleIdx<numSamples; sampleIdx++)
-//        {
-//            channelData[sampleIdx] = measureChannelOutputData[sampleIdx];
-//        }
-//    }
 }
 
 //==============================================================================
@@ -621,9 +647,11 @@ int GroovinatorAudioProcessor::getPlayHeadRelativePulseNum()
     return _playHeadInfo.ppqPosition - _playHeadInfo.ppqPositionOfLastBarStart;
 }
 
-int GroovinatorAudioProcessor::getMostRecentMeasureBufferSample()
+int GroovinatorAudioProcessor::getMostRecentMeasureBufferSample(int channel)
 {
-    return _mostRecentMeasureBufferSample;
+    if (channel < _mostRecentMeasureBufferSamplesByChannel.size())
+        return _mostRecentMeasureBufferSamplesByChannel[channel];
+    return -1;
 }
 
 int GroovinatorAudioProcessor::getMeasureBufferSize()

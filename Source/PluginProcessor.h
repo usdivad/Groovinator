@@ -63,7 +63,7 @@ public:
     AudioPlayHead::CurrentPositionInfo getPlayHeadInfo();
     double getPlayHeadBpm();
     bool getHasPlayHeadBeenSet();
-    int getMostRecentMeasureBufferSample();
+    int getMostRecentMeasureBufferSample(int channel);
     int getMeasureBufferSize();
     double getSoundTouchTempo();
     int getMeasuresElapsed();
@@ -118,7 +118,7 @@ private:
     int _playHeadTimeDiff;
     
     AudioSampleBuffer _measureBuffer;
-    int _mostRecentMeasureBufferSample;
+    std::vector<int> _mostRecentMeasureBufferSamplesByChannel;
     double _mostRecentMeasureStartPpq;
     int _measuresElapsed;
     bool _hasMeasureBufferBeenSet;
