@@ -23,6 +23,15 @@ class GroovinatorAudioProcessor : public AudioProcessor
 {
 public:
     //==============================================================================
+    enum ProcessMode
+    {
+        kSoundTouchPitchShift=1, // ComboBox IDs must be > 0
+        kSoundTouchTimeStretch,
+        kManualResample,
+        kManualConcatenateSteps
+    };
+    
+    //==============================================================================
     GroovinatorAudioProcessor();
     ~GroovinatorAudioProcessor();
 
@@ -71,9 +80,11 @@ public:
     GroovinatorRhythmHandler& getRhythmHandler();
     String getProcessDebugMessage();
     std::vector<double> getStepStretchRatios(); // TODO: Migrate this to rhythm handler
+    ProcessMode getProcessMode();
     
     // ... and custom setters
     void setTestSliderValue(float v);
+    void setProcessMode(ProcessMode processMode);
     
     // Utility methods
     int calculateNumSamplesPerMeasure();
@@ -86,14 +97,6 @@ public:
 
 private:
     //void updateValuesFromPlayHead();
-    
-    enum ProcessMode
-    {
-        kSoundTouchTimeStretch,
-        kSoundTouchPitchShift,
-        kManualResample,
-        kManualConcatenateSteps
-    };
     
     // Processing methods called by processBlock()
     void preprocessUpdate(AudioPlayHead* playHead, double sampleRate, int numSamples);

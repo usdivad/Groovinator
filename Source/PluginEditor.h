@@ -20,7 +20,8 @@
 */
 class GroovinatorAudioProcessorEditor  : public AudioProcessorEditor,
                                          public Timer,
-                                         private Slider::Listener
+                                         private Slider::Listener,
+                                         private ComboBox::Listener
 {
 public:
     GroovinatorAudioProcessorEditor (GroovinatorAudioProcessor&);
@@ -35,6 +36,7 @@ public:
 private:
     // Listener handlers
     void sliderValueChanged(Slider* slider) override;
+    void comboBoxChanged(ComboBox* comboBox) override;
     
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -52,6 +54,7 @@ private:
     Slider _targetNumStepsSlider;
     Label _originalRhythmLabel;
     Label _targetRhythmLabel;
+    ComboBox _processModeSelector;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GroovinatorAudioProcessorEditor)
 };

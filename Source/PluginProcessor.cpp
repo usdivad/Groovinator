@@ -38,7 +38,7 @@ GroovinatorAudioProcessor::GroovinatorAudioProcessor() :
     _measuresElapsed(0),
     _hasMeasureBufferBeenSet(false),
 
-    _processMode(kManualConcatenateSteps)
+    _processMode(kSoundTouchTimeStretch)
 {
 }
 
@@ -475,6 +475,10 @@ void GroovinatorAudioProcessor::processChannelManualResample(float* channelData,
         // Update most recent sample index
         mostRecentMeasureBufferSample += numOutputSamples;
     }
+    else
+    {
+        _processDebugMessage << "can't write to measure buffer";
+    }
     
     // Write output samples from measure buffer
     int posInSamples = calculatePlayHeadRelativePositionInSamples();
@@ -689,6 +693,11 @@ std::vector<double> GroovinatorAudioProcessor::getStepStretchRatios()
     return _stepStretchRatios;
 }
 
+GroovinatorAudioProcessor::ProcessMode GroovinatorAudioProcessor::getProcessMode()
+{
+    return _processMode;
+}
+
 // Setters
 void GroovinatorAudioProcessor::setTestSliderValue(float v)
 {
@@ -699,6 +708,11 @@ void GroovinatorAudioProcessor::setTestSliderValue(float v)
     
     _soundTouchTempo = v;
     //_soundTouch.setTempo(v);
+}
+
+void GroovinatorAudioProcessor::setProcessMode(GroovinatorAudioProcessor::ProcessMode processMode)
+{
+    _processMode = processMode;
 }
 
 // Utility methods

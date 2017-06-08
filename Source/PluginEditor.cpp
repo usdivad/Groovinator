@@ -43,6 +43,14 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _debugLabel.setFont(10.0f);
     _debugLabel.setText("", dontSendNotification);
     
+    // Process mode selector
+    _processModeSelector.addItem("Classic Stretch", GroovinatorAudioProcessor::kSoundTouchTimeStretch);
+    _processModeSelector.addItem("Sample 'n' Shift", GroovinatorAudioProcessor::kManualResample);
+    _processModeSelector.addItem("Step Repeater", GroovinatorAudioProcessor::kManualConcatenateSteps);
+    //_processModeSelector.addItem("Classic time-stretch", GroovinatorAudioProcessor::kSoundTouchTimeStretch);
+    _processModeSelector.setJustificationType(Justification::centred);
+    _processModeSelector.setSelectedId(GroovinatorAudioProcessor::kSoundTouchTimeStretch);
+    _processModeSelector.addListener(this);
     
     //==============================================================================
     //Rhythm
@@ -83,6 +91,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     addAndMakeVisible(&_originalNumStepsLabel);
     addAndMakeVisible(&_targetNumStepsSlider);
     addAndMakeVisible(&_targetNumStepsLabel);
+    addAndMakeVisible(&_processModeSelector);
     
     // Start timer
     startTimer(100);
@@ -120,6 +129,11 @@ void GroovinatorAudioProcessorEditor::resized()
     _debugLabel.setBounds(0, getHeight()-33, getWidth(), 33);
     
     
+    double processModeSelectorWidth = getWidth()/4;
+    double processModeSelectorHeight = 20;
+    _processModeSelector.setBounds((getWidth()/2) - (processModeSelectorWidth/2), 80, processModeSelectorWidth, processModeSelectorHeight);
+    
+    
     // Rhythm components
     // Component positions will generally go in the format:
     // .setBounds(<componentName>X, <original/target>RhythmY + <componentName>YOffset, <componentName>Width, <componentName>Height)
@@ -149,7 +163,7 @@ void GroovinatorAudioProcessorEditor::resized()
     double numStepsSliderHeight = 50;
     
     // Overall rhythm position
-    double originalRhythmY = 80;
+    double originalRhythmY = 100;
     double targetRhythmY = originalRhythmY + + rhythmLabelHeight + rhythmBgRectHeight + 33;
     
     _originalRhythmLabel.setBounds(rhythmLabelX, originalRhythmY + rhythmLabelYOffset, rhythmLabelWidth, rhythmLabelHeight);
@@ -192,6 +206,15 @@ void GroovinatorAudioProcessorEditor::sliderValueChanged(Slider* slider)
         
         printf("%s\n", rhythmHandler.getTargetRhythmStr().c_str());
         printf("target num steps slider changed\n");
+    }
+}
+
+void GroovinatorAudioProcessorEditor::comboBoxChanged(juce::ComboBox *comboBox)
+{
+    if (comboBox == &_processModeSelector)
+    {
+        GroovinatorAudioProcessor::ProcessMode processMode = (GroovinatorAudioProcessor::ProcessMode) comboBox->getSelectedId();
+        processor.setProcessMode(processMode);
     }
 }
 
