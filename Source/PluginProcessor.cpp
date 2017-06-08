@@ -552,7 +552,7 @@ void GroovinatorAudioProcessor::processChannelManualConcatenateSteps(float* chan
     int posIdx = onlyUsePulses ? mostRecentOriginalPulseIdx : mostRecentOriginalStepIdx;
     //int posInSamples = (posIdx * numSamplesPerOriginalStep) + proportionOfTargetStepElapsedInSamples; // Using target proportion elapsed; good as a basis for some actual time-stretching, but not here
     int posInSamples = (posIdx * numSamplesPerOriginalStep) + proportionOfOriginalStepElapsedInSamples; // Using original proportion elapsed
-    posInSamples = std::min(posInSamples, mostRecentMeasureBufferSample - numSamples - 1);
+    posInSamples = std::min(posInSamples, mostRecentMeasureBufferSample - numSamples);
     //if (targetStepIsPulse)// && mostRecentOriginalPulseIdx >=0)
     {
         const float* measureChannelOutputData = _measureBuffer.getReadPointer(channel, posInSamples);

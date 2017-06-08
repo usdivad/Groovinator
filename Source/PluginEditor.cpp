@@ -85,7 +85,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     addAndMakeVisible(&_targetNumStepsLabel);
     
     // Start timer
-    startTimer(50);
+    startTimer(100);
 }
 
 GroovinatorAudioProcessorEditor::~GroovinatorAudioProcessorEditor()
@@ -224,7 +224,7 @@ void GroovinatorAudioProcessorEditor::timerCallback()
     _playHeadInfoLabel.setText(playHeadLabelText, sendNotification);
     
     // Set debug label text
-    String debugLabelText;
+    String debugLabelText = "";
     GroovinatorRhythmHandler rhythmHandler = processor.getRhythmHandler();
     
     debugLabelText  << "/* "
@@ -250,5 +250,5 @@ void GroovinatorAudioProcessorEditor::timerCallback()
     
                     << " */";
     _debugLabel.setText(debugLabelText, sendNotification);
-    _debugLabel.toFront(false);
+    //_debugLabel.toFront(false);
 }
