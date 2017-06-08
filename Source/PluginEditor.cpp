@@ -224,10 +224,12 @@ void GroovinatorAudioProcessorEditor::timerCallback()
     _playHeadInfoLabel.setText(playHeadLabelText, sendNotification);
     
     // Set debug label text
+    ///*
     String debugLabelText = "";
     GroovinatorRhythmHandler rhythmHandler = processor.getRhythmHandler();
     
-    debugLabelText  << "/* "
+    // TODO: Figure out why this crashes sometimes when releasing String
+    debugLabelText  << "// "
     
                     // Audio
                     << "sampsPerMeasure=" << String(processor.calculateNumSamplesPerMeasure())
@@ -248,7 +250,8 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                     << ", trgtRhythm=" << rhythmHandler.getTargetRhythmStr()
                     << ", stepStretchRatios=" << GroovinatorRhythmHandler::stepStretchRatiosToString(processor.getStepStretchRatios())
     
-                    << " */";
+                    << " //";
     _debugLabel.setText(debugLabelText, sendNotification);
     //_debugLabel.toFront(false);
+    //*/
 }
