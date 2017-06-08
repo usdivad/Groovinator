@@ -255,10 +255,10 @@ void GroovinatorAudioProcessor::preprocessUpdate(AudioPlayHead* playHead, double
     double rhythmProportion = _rhythmHandler.getProportionOfRhythmElapsed();
     int rhythmNumSteps = _rhythmHandler.getOriginalNumSteps();
     int rhythmStepIndex = GroovinatorRhythmHandler::proportionToStepIndex(rhythmProportion, rhythmNumSteps);
-    std::vector<double> rhythmStepStretchRatios = _rhythmHandler.calculateStepStretchRatios();
-    if (rhythmStepIndex >= 0 && rhythmStepIndex < rhythmStepStretchRatios.size())
+    _stepStretchRatios = GroovinatorRhythmHandler::calculateStepStretchRatios(_rhythmHandler.getOriginalRhythm(), _rhythmHandler.getTargetRhythm());
+    if (rhythmStepIndex >= 0 && rhythmStepIndex < _stepStretchRatios.size())
     {
-        _stepStretchRatio = rhythmStepStretchRatios[rhythmStepIndex];
+        _stepStretchRatio = _stepStretchRatios[rhythmStepIndex];
         _soundTouchTempo = _stepStretchRatio;
         //_soundTouchTempo = std::min(std::max(_soundTouchTempo, 0.1), 0.9);
     }
@@ -284,11 +284,11 @@ void GroovinatorAudioProcessor::preprocessUpdate(AudioPlayHead* playHead, double
         {
             double ratioSum;
             double ratioAvg;
-            for (size_t i=0; i<rhythmStepStretchRatios.size(); i++)
+            for (size_t i=0; i<_stepStretchRatios.size(); i++)
             {
-                ratioSum += rhythmStepStretchRatios[i];
+                ratioSum += _stepStretchRatios[i];
             }
-            ratioAvg = ratioSum / rhythmStepStretchRatios.size();
+            ratioAvg = ratioSum / _stepStretchRatios.size();
             measureBufferSize = (int) (calculateNumSamplesPerMeasure() / ratioAvg);
         }
         else if (_processMode == kManualConcatenateSteps)
@@ -679,9 +679,14 @@ GroovinatorRhythmHandler& GroovinatorAudioProcessor::getRhythmHandler()
     return _rhythmHandler;
 }
 
- String GroovinatorAudioProcessor::getProcessDebugMessage()
+String GroovinatorAudioProcessor::getProcessDebugMessage()
 {
     return _processDebugMessage;
+}
+
+std::vector<double> GroovinatorAudioProcessor::getStepStretchRatios()
+{
+    return _stepStretchRatios;
 }
 
 // Setters

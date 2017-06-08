@@ -70,6 +70,7 @@ public:
     double getSoundTouchInputOutputRatio();
     GroovinatorRhythmHandler& getRhythmHandler();
     String getProcessDebugMessage();
+    std::vector<double> getStepStretchRatios(); // TODO: Migrate this to rhythm handler
     
     // ... and custom setters
     void setTestSliderValue(float v);
@@ -109,6 +110,7 @@ private:
     
     soundtouch::SoundTouch _soundTouch;
     double _soundTouchTempo;
+    std::vector<double> _stepStretchRatios;
     double _stepStretchRatio;
 
     AudioPlayHead* _playHead;

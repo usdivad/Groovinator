@@ -41,15 +41,15 @@ public:
     // Utility methods
     void toggleOriginalRhythmStepAt(int i);
     void toggleTargetRhythmStepAt(int i);
-    std::vector<double> calculateStepStretchRatios();
-    std::string calculateStepStretchRatiosStr();
+    //std::vector<double> calculateStepStretchRatios();
     
     // Fibonacci stretch methods (static)
     // Adapted from the Python implementations in fibonaccistretch.py
     static std::vector<int> calculatePulseLengths(RhythmSequence rhythm); // fibonaccistretch.calculate_pulse_lengths()
     static std::vector<double> calculatePulseRatios(RhythmSequence originalRhythm, RhythmSequence targetRhythm); // fibonaccistretch.calculate_pulse_ratios()
     static std::vector<double> calculateStepStretchRatios(RhythmSequence originalRhythm, RhythmSequence targetRhythm); // fibonaccistretch.calculate_step_stretch_ratios() -- Calculate stretch ratios for each original step, for use in real-time
-    
+    static std::string stepStretchRatiosToString(std::vector<double> ratios);
+
     // Other static methods
     static RhythmSequence generateEuclideanRhythm(int numPulses, int numSteps);
     static std::string rhythmToString(RhythmSequence rhythm);
