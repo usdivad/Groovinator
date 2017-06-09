@@ -213,8 +213,16 @@ void GroovinatorAudioProcessorEditor::comboBoxChanged(juce::ComboBox *comboBox)
 {
     if (comboBox == &_processModeSelector)
     {
+        // Set process mode
         GroovinatorAudioProcessor::ProcessMode processMode = (GroovinatorAudioProcessor::ProcessMode) comboBox->getSelectedId();
         processor.setProcessMode(processMode);
+        
+        // Show or hide target rhythm components depending on mode
+        bool showTarget = (processMode != GroovinatorAudioProcessor::kManualConcatenateSteps);
+        _targetRhythmLabel.setVisible(showTarget);
+        _targetRhythmBgRect.setVisible(showTarget);
+        _targetNumStepsLabel.setVisible(showTarget);
+        _targetNumStepsSlider.setVisible(showTarget);
     }
 }
 
@@ -247,7 +255,7 @@ void GroovinatorAudioProcessorEditor::timerCallback()
     _playHeadInfoLabel.setText(playHeadLabelText, sendNotification);
     
     // Set debug label text
-    ///*
+    /*
     String debugLabelText = "";
     GroovinatorRhythmHandler rhythmHandler = processor.getRhythmHandler();
     
@@ -276,5 +284,5 @@ void GroovinatorAudioProcessorEditor::timerCallback()
                     << " //";
     _debugLabel.setText(debugLabelText, sendNotification);
     //_debugLabel.toFront(false);
-    //*/
+    */
 }
