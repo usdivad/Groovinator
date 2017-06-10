@@ -23,6 +23,12 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     // editor's size to whatever you need it to be.
     setSize (640, 396);
     
+    //==============================================================================
+    // Look and feel
+    getLookAndFeel().setColour(TextButton::buttonColourId, Colours::white);
+    getLookAndFeel().setColour(TextButton::textColourOffId, Colour::fromString("ff6d6d6d"));
+    
+    //==============================================================================
     // Test slider (pitch-shift, rate, etc. depending on the need...)
     _testSlider.setSliderStyle(Slider::LinearVertical);
     //_testSlider.setRange(-24.0, 24.0); // Semitones
@@ -49,6 +55,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _processModeSelector.addItem("Step Repeater", GroovinatorAudioProcessor::kManualConcatenateSteps);
     //_processModeSelector.addItem("Classic time-stretch", GroovinatorAudioProcessor::kSoundTouchTimeStretch);
     _processModeSelector.setJustificationType(Justification::centred);
+    _processModeSelector.setColour(ComboBox::backgroundColourId, Colour::fromString("ff404040"));
     _processModeSelector.setSelectedId(GroovinatorAudioProcessor::kSoundTouchTimeStretch);
     _processModeSelector.addListener(this);
     
@@ -67,6 +74,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _originalNumStepsSlider.setRange(1, 99, 1);
     _originalNumStepsSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 30, 20);
     _originalNumStepsSlider.setIncDecButtonsMode(Slider::incDecButtonsDraggable_AutoDirection);
+    _originalNumStepsSlider.setColour(Slider::textBoxBackgroundColourId, Colour::fromString("ff404040"));
     _originalNumStepsSlider.setValue(8);
     _originalNumStepsSlider.addListener(this);
     _originalNumStepsLabel.setText("# steps", dontSendNotification);
@@ -75,6 +83,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _targetNumStepsSlider.setRange(1, 99, 1);
     _targetNumStepsSlider.setTextBoxStyle(Slider::TextBoxLeft, false, 30, 20);
     _targetNumStepsSlider.setIncDecButtonsMode(Slider::incDecButtonsDraggable_AutoDirection);
+    _targetNumStepsSlider.setColour(Slider::textBoxBackgroundColourId, Colour::fromString("ff404040"));
     _targetNumStepsSlider.setValue(8);
     _targetNumStepsSlider.addListener(this);
     _targetNumStepsLabel.setText("# steps", dontSendNotification);
@@ -105,7 +114,8 @@ GroovinatorAudioProcessorEditor::~GroovinatorAudioProcessorEditor()
 void GroovinatorAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    //g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    g.fillAll(Colours::black);
     
     // TODO: Use LookAndFeel for all the colors etc.
     
@@ -139,20 +149,23 @@ void GroovinatorAudioProcessorEditor::resized()
     // .setBounds(<componentName>X, <original/target>RhythmY + <componentName>YOffset, <componentName>Width, <componentName>Height)
     
     // Labels
-    double rhythmLabelX = 20;
+    //double rhythmLabelX = 20;
+    double rhythmLabelX = (getWidth()/2.0) - (480/2.0);
     double rhythmLabelYOffset = 0;
     double rhythmLabelWidth = 200;
     double rhythmLabelHeight = 20;
     
     // Rectangles
-    double rhythmBgRectX = 20;
+    double rhythmBgRectX = rhythmLabelX;
     double rhythmBgRectYOffset = rhythmLabelYOffset + rhythmLabelHeight + 5;
-    double rhythmBgRectWidth = (getWidth() - (2*rhythmBgRectX)) * 0.8;
+    //double rhythmBgRectWidth = (getWidth() - (2*rhythmBgRectX)) * 0.8;
+    double rhythmBgRectWidth = 480;
     double rhythmBgRectHeight = 99;
     
     // Num steps labels and sliders
     double numStepsWidth = 60;
-    double numStepsX = getWidth() - rhythmBgRectX - numStepsWidth; // rhythmBgRectX + rhythmBgRectWidth + 10;
+    //double numStepsX = getWidth() - rhythmBgRectX - numStepsWidth; // rhythmBgRectX + rhythmBgRectWidth + 10;
+    double numStepsX = getWidth() - 20 - numStepsWidth;
     
     double numStepsLabelYOffset = 0;
     double numStepsLabelWidth = numStepsWidth;
