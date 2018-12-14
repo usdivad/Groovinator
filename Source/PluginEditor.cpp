@@ -35,7 +35,7 @@ GroovinatorAudioProcessorEditor::GroovinatorAudioProcessorEditor (GroovinatorAud
     _testSlider.setRange(0.1, 3.0); // Rate
     _testSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 50, 20);
     //_testSlider.showTextBox();
-    _testSlider.setPopupDisplayEnabled(true, this);
+    _testSlider.setPopupDisplayEnabled(true, true, this);
     //_testSlider.setTextValueSuffix(" (test)");
     //_testSlider.setValue(0.0); // Semitones
     _testSlider.setValue(1.0); // Rate

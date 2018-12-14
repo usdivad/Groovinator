@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "SoundTouch.h"
+#include "../Library/SoundTouch/SoundTouch.h"
 
 #include "GroovinatorRhythmHandler.h"
 

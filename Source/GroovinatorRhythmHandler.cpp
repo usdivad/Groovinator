@@ -8,7 +8,7 @@
 
 #include <sstream>
 
-#include "bjorklund.h"
+#include "../Library/BjorklundsAlgorithm/bjorklund.h"
 
 #include "GroovinatorRhythmHandler.h"
 

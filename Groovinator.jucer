@@ -9,8 +9,8 @@
               pluginCode="F1B0" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
               pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="GroovinatorAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.Groovinator"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.0.1"
-              companyWebsite="http://usdivad.com/" companyName="David Su">
+              pluginAAXCategory="2" jucerVersion="5.4.1" companyWebsite="http://usdivad.com/"
+              companyName="David Su" pluginFormats="buildVST,buildAU">
   <MAINGROUP id="MkOCXr" name="Groovinator">
     <GROUP id="{60559372-F89F-A8A0-C0E7-E4A3DE981D88}" name="Source">
       <FILE id="tj5Hlr" name="GroovinatorRhythmHandler.cpp" compile="1" resource="0"
@@ -146,4 +146,7 @@
     <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

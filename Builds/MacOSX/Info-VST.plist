@@ -8,7 +8,7 @@
     <key>CFBundleIconFile</key>
     <string></string>
     <key>CFBundleIdentifier</key>
-    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <string>com.usdivad.Groovinator</string>
     <key>CFBundleName</key>
     <string>Groovinator</string>
     <key>CFBundleDisplayName</key>
@@ -22,7 +22,7 @@
     <key>CFBundleVersion</key>
     <string>1.0.0</string>
     <key>NSHumanReadableCopyright</key>
-    <string>David Su</string>
+    <string></string>
     <key>NSHighResolutionCapable</key>
     <true/>
   </dict>
