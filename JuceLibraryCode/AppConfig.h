@@ -299,10 +299,10 @@
 // Audio plugin settings..
 
 #ifndef  JucePlugin_Build_VST
- #define JucePlugin_Build_VST              1
+ #define JucePlugin_Build_VST              0
 #endif
 #ifndef  JucePlugin_Build_VST3
- #define JucePlugin_Build_VST3             0
+ #define JucePlugin_Build_VST3             1
 #endif
 #ifndef  JucePlugin_Build_AU
  #define JucePlugin_Build_AU               1
@@ -362,13 +362,13 @@
  #define JucePlugin_EditorRequiresKeyboardFocus  0
 #endif
 #ifndef  JucePlugin_Version
- #define JucePlugin_Version                1.0.0
+ #define JucePlugin_Version                0.1.0
 #endif
 #ifndef  JucePlugin_VersionCode
- #define JucePlugin_VersionCode            0x10000
+ #define JucePlugin_VersionCode            0x100
 #endif
 #ifndef  JucePlugin_VersionString
- #define JucePlugin_VersionString          "1.0.0"
+ #define JucePlugin_VersionString          "0.1.0"
 #endif
 #ifndef  JucePlugin_VSTUniqueID
  #define JucePlugin_VSTUniqueID            JucePlugin_PluginCode
@@ -438,6 +438,12 @@
 #endif
 #ifndef  JucePlugin_IAAName
  #define JucePlugin_IAAName                "David Su: Groovinator"
+#endif
+#ifndef  JucePlugin_VSTNumMidiInputs
+ #define JucePlugin_VSTNumMidiInputs       16
+#endif
+#ifndef  JucePlugin_VSTNumMidiOutputs
+ #define JucePlugin_VSTNumMidiOutputs      16
 #endif
 
 //==============================================================================
